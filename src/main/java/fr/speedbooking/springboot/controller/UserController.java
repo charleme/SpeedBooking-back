@@ -16,9 +16,14 @@ public class UserController {
     private UserRepository userRepository;
 
     // get all users
-
     @GetMapping("/users")
     public List<User> getAllUser(){
         return userRepository.findAll();
+    }
+
+    //add user to the database
+    @PostMapping("/addUser")
+    public User createUser(@RequestBody User user){
+        return userRepository.save(user);
     }
 }
