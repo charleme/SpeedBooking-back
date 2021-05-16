@@ -27,30 +27,28 @@ public class User implements Serializable {
     @Column(name = "genres")
     private String genres;
 
+    @Column(name="languages")
+    private String languages;
+
     @OneToMany(mappedBy="author", fetch=FetchType.EAGER)
     private Set<Book> books;
 
-    @OneToMany(mappedBy = "user", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "id_user", fetch=FetchType.EAGER)
     private Set<UserBook> booksRead;
 
     public User() {
     }
 
-    public User(String username, String email, String password, Timestamp createTime, String genres) {
+    public User(String username, String email, String password, Timestamp createTime, String genres, String languages,
+                Set<Book> books, Set<UserBook> booksRead) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.createTime = createTime;
         this.genres = genres;
-    }
-
-    public User(String username, String email, String password, Timestamp createTime, String genres, Set<Book> books) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.createTime = createTime;
-        this.genres = genres;
+        this.languages = languages;
         this.books = books;
+        this.booksRead = booksRead;
     }
 
     public Long getIdUser() {
@@ -115,5 +113,13 @@ public class User implements Serializable {
 
     public void setBooksRead(Set<UserBook> booksRead) {
         this.booksRead = booksRead;
+    }
+
+    public String getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(String languages) {
+        this.languages = languages;
     }
 }

@@ -1,11 +1,7 @@
 package fr.speedbooking.springboot.model;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Set;
 
 @Entity
@@ -39,24 +35,27 @@ public class Book implements Serializable{
     @JoinColumn(name="idAuthor")
     private User author;
 
-    @OneToMany(mappedBy = "book", fetch=FetchType.EAGER)
-    Set<UserBook> readers;
+    @OneToMany(mappedBy = "id_book", fetch=FetchType.EAGER)
+    private Set<UserBook> readers;
 
-    @OneToMany(mappedBy = "book", fetch=FetchType.EAGER)
-    Set<GenreBook> bookGenres;
+    @OneToMany(mappedBy = "book_id_book", fetch=FetchType.EAGER)
+    private Set<GenreBook> bookGenres;
 
     public Book() {
     }
 
-    public Book(String bookTitle, String language, String bookImage, String summary, String firstChapter, String audienceTag, String links, User author) {
-        this.titleBook = bookTitle;
+    public Book(String titleBook, String language, String imageBook, String summaryBook, String firstChapter,
+                String audienceTag, String links, User author, Set<UserBook> readers, Set<GenreBook> bookGenres) {
+        this.titleBook = titleBook;
         this.language = language;
-        this.imageBook = bookImage;
-        this.summaryBook = summary;
+        this.imageBook = imageBook;
+        this.summaryBook = summaryBook;
         this.firstChapter = firstChapter;
         this.audienceTag = audienceTag;
         this.links = links;
         this.author = author;
+        this.readers = readers;
+        this.bookGenres = bookGenres;
     }
 
     public int getIdBook() {

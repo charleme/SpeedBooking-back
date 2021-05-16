@@ -1,6 +1,7 @@
 package fr.speedbooking.springboot.model;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -13,13 +14,17 @@ public class Genre implements Serializable {
 
     @Column(name = "name_genre", length = 45)
     private String nameGenre;
+
+    @OneToMany(mappedBy = "id_genre", fetch=FetchType.EAGER)
+    private Set<GenreBook> booksAssociated;
     
     public Genre() {
     	
     }
     
-    public Genre(String name) {
+    public Genre(String name, Set<GenreBook> booksAssociated) {
     	this.nameGenre = name;
+    	this.booksAssociated = booksAssociated;
     }
     
     @Id
