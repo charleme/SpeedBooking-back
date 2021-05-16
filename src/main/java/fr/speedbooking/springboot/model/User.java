@@ -1,7 +1,9 @@
 package fr.speedbooking.springboot.model;
 
 import javax.persistence.*;
+
 import java.sql.Timestamp;
+import java.util.Collection;
 
 @Entity
 @Table(name = "user")
@@ -9,7 +11,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_user;
+    private Long idUser;
 
     @Column(name = "username")
     private String username;
@@ -21,30 +23,33 @@ public class User {
     private String password;
 
     @Column(name = "create_time")
-    private Timestamp create_time;
+    private Timestamp createTime;
 
     @Column(name = "genres")
     private String genres;
+    
+    @OneToMany(mappedBy = "author")
+	private Collection<Book> myBooks;
 
     public User() {
 
     }
 
-    public User(String username, String email, String password, Timestamp create_time, String genres) {
+    public User(String username, String email, String password, Timestamp createTime, String genres) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.create_time = create_time;
+        this.createTime = createTime;
         this.genres = genres;
     }
 
     @Id
-    public int getId_user() {
-        return id_user;
+    public Long getIdUser() {
+        return idUser;
     }
 
-    public void setId_user(int id_user) {
-        this.id_user = id_user;
+    public void setIdUser(Long id_user) {
+        this.idUser = id_user;
     }
 
     public String getUsername() {
@@ -71,12 +76,12 @@ public class User {
         this.password = password;
     }
 
-    public Timestamp getCreate_time() {
-        return create_time;
+    public Timestamp getCreateTime() {
+        return createTime;
     }
 
-    public void setCreate_time(Timestamp create_time) {
-        this.create_time = create_time;
+    public void setCreateTime(Timestamp create_time) {
+        this.createTime = create_time;
     }
 
     public String getGenres() {
@@ -85,5 +90,13 @@ public class User {
 
     public void setGenres(String genres) {
         this.genres = genres;
+    }
+    
+    public Collection<Book> getMyBooks() {
+    	return myBooks;
+    }
+    
+    public void setMyBooks(Collection<Book> myBooks) {
+    	this.myBooks = myBooks;
     }
 }
