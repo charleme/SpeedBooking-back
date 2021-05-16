@@ -26,7 +26,7 @@ public class BookController {
         return books;
     }
 
-    //add user to the database
+    //add book to the database
     @PostMapping("/addUser")
     public Book createUser(@RequestBody Book book){
         return bookRepository.save(book);
