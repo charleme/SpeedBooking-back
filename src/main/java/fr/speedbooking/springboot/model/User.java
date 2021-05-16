@@ -9,7 +9,7 @@ import java.util.Collection;
 public class User implements Serializable {
     @Id
     @GeneratedValue
-    private int idUser;
+    private Long idUser;
 
     @Column(name = "username")
     private String username;
@@ -49,11 +49,11 @@ public class User implements Serializable {
         this.books = books;
     }
 
-    public int getIdUser() {
+    public Long getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(int idUser) {
+    public void setIdUser(Long idUser) {
         this.idUser = idUser;
     }
 
