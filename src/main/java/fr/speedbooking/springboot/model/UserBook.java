@@ -6,17 +6,17 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "userbook")
-public class UserBook implements Serializable {
+public class UserBook {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUserBook;
 
 	@ManyToOne
-    @JoinColumn(name = "id_user", referencedColumnName = "id_user")
+    @JoinColumn(name = "id_user")
     private User user;
 	
 	@ManyToOne
-    @JoinColumn(name = "id_book", referencedColumnName = "id_book")
+    @JoinColumn(name = "id_book")
     private Book book;
 	
 	@Column (name = "user_progress")
@@ -40,27 +40,27 @@ public class UserBook implements Serializable {
 	public void setIdUserBook(Long id) {
 		this.idUserBook = id;
 	}
-	
+
 	public User getUser() {
 		return user;
 	}
-	
+
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+
 	public Book getBook() {
 		return book;
 	}
-	
+
 	public void setBook(Book book) {
 		this.book = book;
 	}
-	
+
 	public int getProgress() {
 		return progress;
 	}
-	
+
 	public void setProgress(int progress) {
 		this.progress = progress;
 	}

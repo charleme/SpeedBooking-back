@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Set;
 
 @Entity
-public class Book implements Serializable {
+public class Book implements Serializable{
     @Id
     @GeneratedValue
     private int idBook;
@@ -122,7 +122,6 @@ public class Book implements Serializable {
     public void setLinks(String links) {
         this.links = links;
     }
-<<<<<<< HEAD
 
     public Set<UserBook> getReaders() {
         return readers;
@@ -139,6 +138,4 @@ public class Book implements Serializable {
     public void setBookGenres(Set<GenreBook> bookGenres) {
         this.bookGenres = bookGenres;
     }
-=======
->>>>>>> origin/fix-database-entities
 }
