@@ -1,22 +1,14 @@
 package fr.speedbooking.springboot.model;
 
-import java.io.Serializable;
-import java.sql.Timestamp;
-
 import javax.persistence.*;
-
+import java.io.Serializable;
 
 @Entity
-@Table(name = "book")
 public class Book implements Serializable {
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idBook;
+    @Id
+    @GeneratedValue
+    private int idPlayer;
 
-	@ManyToOne
-	@JoinColumn(name = "id_author")
-	private User author;
-    
     @Column(name = "title_book")
     private String bookTitle;
 
@@ -28,88 +20,91 @@ public class Book implements Serializable {
 
     @Column(name = "first_chapter")
     private String firstChapter;
-    
+
     @Column(name = "audience_tag")
     private String audienceTag;
-    
+
     @Column(name = "links")
     private String links;
 
-    public Book() {
+    @ManyToOne
+    @JoinColumn(name="idAuthor")
+    private User author;
 
+    public Book() {
     }
-    public Book(String title, String image, String summary, String first_chapter, String audienceTags, String links) {
-    	this.bookTitle = title;
-    	this.bookImage = image;
-    	this.summary = summary;
-    	this.firstChapter = first_chapter;
-    	this.audienceTag = audienceTags;
-    	this.links = links;
+
+    public Book(String bookTitle, String bookImage, String summary, String firstChapter, String audienceTag, String links, User author) {
+        this.bookTitle = bookTitle;
+        this.bookImage = bookImage;
+        this.summary = summary;
+        this.firstChapter = firstChapter;
+        this.audienceTag = audienceTag;
+        this.links = links;
+        this.author = author;
     }
-    
-    @Id
-    public Long getIdBook() {
-        return idBook;
+
+    public int getIdPlayer() {
+        return idPlayer;
     }
-    
-    public void setIdBook(Long idBook) {
-    	this.idBook = idBook;
+
+    public void setIdPlayer(int idPlayer) {
+        this.idPlayer = idPlayer;
     }
-    
+
     public User getAuthor() {
-    	return author;
+        return author;
     }
-    
+
     public void setAuthor(User author) {
-    	this.author = author;
+        this.author = author;
     }
-    
-    public String getTitle() {
-    	return bookTitle;
+
+    public String getBookTitle() {
+        return bookTitle;
     }
-    
-    public void setTitle(String title) {
-    	this.bookTitle = title;
+
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
     }
-    
-    public String getImage() {
-    	return bookImage;
+
+    public String getBookImage() {
+        return bookImage;
     }
-    
+
     public void setBookImage(String bookImage) {
-    	this.bookImage = bookImage;
+        this.bookImage = bookImage;
     }
-    
+
     public String getSummary() {
-    	return this.summary;
+        return summary;
     }
-    
+
     public void setSummary(String summary) {
-    	this.summary = summary;
+        this.summary = summary;
     }
-    
+
     public String getFirstChapter() {
-    	return firstChapter;
+        return firstChapter;
     }
-    
+
     public void setFirstChapter(String firstChapter) {
-    	this.firstChapter = firstChapter;
+        this.firstChapter = firstChapter;
     }
-    
-    public String getAudienceTags() {
-    	return audienceTag;
+
+    public String getAudienceTag() {
+        return audienceTag;
     }
-    
-    public void setAudienceTags(String tags) {
-    	this.audienceTag = tags;
+
+    public void setAudienceTag(String audienceTag) {
+        this.audienceTag = audienceTag;
     }
-    
+
     public String getLinks() {
-    	return links;
+        return links;
     }
-    
+
     public void setLinks(String links) {
-    	this.links = links;
+        this.links = links;
     }
-    
 }

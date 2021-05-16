@@ -1,17 +1,15 @@
 package fr.speedbooking.springboot.model;
 
 import javax.persistence.*;
-
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
 
 @Entity
-@Table(name = "user")
-public class User {
-
+public class User implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idUser;
+    @GeneratedValue
+    private int idUser;
 
     @Column(name = "username")
     private String username;
@@ -27,12 +25,11 @@ public class User {
 
     @Column(name = "genres")
     private String genres;
-    
-    @OneToMany(mappedBy = "author")
-	private Collection<Book> myBooks;
+
+    @OneToMany(mappedBy="author")
+    private Collection<Book> books;
 
     public User() {
-
     }
 
     public User(String username, String email, String password, Timestamp createTime, String genres) {
@@ -43,13 +40,29 @@ public class User {
         this.genres = genres;
     }
 
-    @Id
-    public Long getIdUser() {
+    public User(String username, String email, String password, Timestamp createTime, String genres, Collection<Book> books) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.createTime = createTime;
+        this.genres = genres;
+        this.books = books;
+    }
+
+    public int getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(Long id_user) {
-        this.idUser = id_user;
+    public void setIdUser(int idUser) {
+        this.idUser = idUser;
+    }
+
+    public Collection<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Collection<Book> books) {
+        this.books = books;
     }
 
     public String getUsername() {
@@ -80,8 +93,8 @@ public class User {
         return createTime;
     }
 
-    public void setCreateTime(Timestamp create_time) {
-        this.createTime = create_time;
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
     }
 
     public String getGenres() {
@@ -90,13 +103,5 @@ public class User {
 
     public void setGenres(String genres) {
         this.genres = genres;
-    }
-    
-    public Collection<Book> getMyBooks() {
-    	return myBooks;
-    }
-    
-    public void setMyBooks(Collection<Book> myBooks) {
-    	this.myBooks = myBooks;
     }
 }

@@ -17,16 +17,11 @@ public class SpeedBookingBackApplication {
 
 	public static void main(String[] args) {
 		ApplicationContext ctx = SpringApplication.run(SpeedBookingBackApplication.class, args);
-		GenreRepository genreDao = ctx.getBean(GenreRepository.class);
 		UserRepository userDao = ctx.getBean(UserRepository.class);
-		userDao.save(new User("em", "em@llml", ";dlczeùzzù", new Timestamp(354442), "testt"));
-		//teamDao.save(new Team("OM"));
-		//teamDao.save(new Team("OL"));
-		//teamDao.save(new Team("PSG"));
-		List<Genre> genres = genreDao.findAll();
-		for(Genre g : genres) {
-			System.out.println("Team : "+ g.getName()); 
-		} 
+		List<User> genres = userDao.findAll();
+		for(User u : genres) {
+			System.out.println("Team : "+ u.getUsername());
+		}
 		
 	}
 
