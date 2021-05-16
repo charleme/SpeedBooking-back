@@ -1,6 +1,7 @@
 package fr.speedbooking.springboot.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -12,11 +13,11 @@ public class Genre implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idGenre;
 
+    @OneToMany(mappedBy = "idGenre")
+    private Collection<GenreBook> booksAssociated;
+
     @Column(name = "name_genre", length = 45)
     private String nameGenre;
-
-    @OneToMany(mappedBy = "id_genre", fetch=FetchType.EAGER)
-    private Set<GenreBook> booksAssociated;
     
     public Genre() {
     	
@@ -27,13 +28,21 @@ public class Genre implements Serializable {
     	this.booksAssociated = booksAssociated;
     }
     
-    @Id
+
     public Long getIdGenre() {
     	return idGenre;
     }
     
     public void setIdGenre(Long id) {
     	this.idGenre = id;
+    }
+
+    public Collection<GenreBook> getBooksAssociated() {
+        return booksAssociated;
+    }
+
+    public void setBooksAssociated(Collection<GenreBook> booksAssociated) {
+        this.booksAssociated = booksAssociated;
     }
     
     public String getNameGenre() {
@@ -43,4 +52,6 @@ public class Genre implements Serializable {
     public void setNameGenre(String name) {
     	this.nameGenre = name;
     }
+
+
 }

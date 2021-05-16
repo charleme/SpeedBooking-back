@@ -12,26 +12,25 @@ public class UserBook implements Serializable {
 
 	@ManyToOne
     @JoinColumn(name = "id_user")
-    private User id_user;
+    private User idUser;
 	
 	@ManyToOne
     @JoinColumn(name = "id_book")
-    private Book id_book;
+    private Book idBook;
 	
-	@Column (name = "user_progress")
-	private int userProgress;
+	@Column (name = "progress")
+	private int progress;
 	
 	public UserBook() {
 		
 	}
 	
-	public UserBook(User id_user, Book id_book, int userProgress) {
-		this.id_user = id_user;
-		this.id_book = id_book;
-		this.userProgress = userProgress;
+	public UserBook(User idUser, Book idBook, int progress) {
+		this.idUser = idUser;
+		this.idBook = idBook;
+		this.progress = progress;
 	}
-	
-	@Id
+
 	public Long getIdUserBook() {
 		return idUserBook;
 	}
@@ -40,27 +39,27 @@ public class UserBook implements Serializable {
 		this.idUserBook = id;
 	}
 
-	public User getId_user() {
-		return id_user;
+	public User getIdUser() {
+		return idUser;
 	}
 
-	public void setId_user(User idUser) {
-		this.id_user = idUser;
+	public void setIdUser(User idUser) {
+		this.idUser = idUser;
 	}
 
-	public Book getId_book() {
-		return id_book;
+	public Book getIdBook() {
+		return idBook;
 	}
 
-	public void setId_book(Book idBook) {
-		this.id_book = idBook;
+	public void setIdBook(Book idBook) {
+		this.idBook = idBook;
 	}
 
-	public int getUserProgress() {
-		return userProgress;
+	public int getProgress() {
+		return progress;
 	}
 
-	public void setUserProgress(int progress) {
-		this.userProgress = progress;
+	public void setProgress(int progress) {
+		this.progress = progress;
 	}
 }

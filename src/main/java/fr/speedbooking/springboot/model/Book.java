@@ -35,10 +35,10 @@ public class Book implements Serializable{
     @JoinColumn(name="idAuthor")
     private User author;
 
-    @OneToMany(mappedBy = "id_book", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "idBook", fetch=FetchType.EAGER)
     private Set<UserBook> readers;
 
-    @OneToMany(mappedBy = "book_id_book", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "idBook", fetch=FetchType.EAGER)
     private Set<GenreBook> bookGenres;
 
     public Book() {

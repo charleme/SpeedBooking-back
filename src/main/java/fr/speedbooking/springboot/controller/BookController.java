@@ -17,8 +17,13 @@ public class BookController {
     private BookRepository bookRepository;
 
     @GetMapping("/books")
-    public List<Book> getAllUser(){
-        return bookRepository.findAll();
+    public List<Book> getAllBooks(){
+        List<Book> books = bookRepository.findAll();
+        for(Book book : books){
+            System.out.println(book.getReaders());
+        }
+
+        return books;
     }
 
     //add user to the database

@@ -12,12 +12,12 @@ public class GenreBook implements Serializable {
     private Long idGenreBook;
 
 	@ManyToOne
-    @JoinColumn(name = "book_id_book")
-    private Book book_id_book;
+    @JoinColumn(name = "id_book")
+    private Book idBook;
 	
 	@ManyToOne
     @JoinColumn(name = "id_genre")
-    private Genre id_genre;
+    private Genre idGenre;
 	
 	@Column(name = "score", length = 45)
     private int score;
@@ -26,13 +26,12 @@ public class GenreBook implements Serializable {
 		
 	}
 	
-	public GenreBook(Book book_id_book, Genre id_genre, int score) {
-		this.book_id_book = book_id_book;
-		this.id_genre = id_genre;
+	public GenreBook(Book idBook, Genre idGenre, int score) {
+		this.idBook = idBook;
+		this.idGenre = idGenre;
 		this.score = score;
 	}
-	
-	@Id
+
 	public Long getIdGenreBook() {
 		return idGenreBook;
 	}
@@ -41,20 +40,20 @@ public class GenreBook implements Serializable {
 		this.idGenreBook = id;
 	}
 	
-	public Book getBook_id_book() {
-		return book_id_book;
+	public Book getIdBook() {
+		return idBook;
 	}
 	
-	public void setBook_id_book(Book book) {
-		this.book_id_book = book;
+	public void setIdBook(Book book) {
+		this.idBook = book;
 	}
 	
-	public Genre getId_genre() {
-		return id_genre;
+	public Genre getIdGenre() {
+		return idGenre;
 	}
 	
-	public void setId_genre(Genre genre) {
-		this.id_genre = genre;
+	public void setIdGenre(Genre genre) {
+		this.idGenre = genre;
 	}
 	
 	public int getScore() {
