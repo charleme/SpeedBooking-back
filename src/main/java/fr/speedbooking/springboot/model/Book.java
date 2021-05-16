@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class Book implements Serializable {
     @Id
     @GeneratedValue
-    private int idPlayer;
+    private int idBook;
 
     @Column(name = "title_book")
     private String bookTitle;
@@ -42,14 +42,6 @@ public class Book implements Serializable {
         this.audienceTag = audienceTag;
         this.links = links;
         this.author = author;
-    }
-
-    public int getIdPlayer() {
-        return idPlayer;
-    }
-
-    public void setIdPlayer(int idPlayer) {
-        this.idPlayer = idPlayer;
     }
 
     public User getAuthor() {
@@ -106,5 +98,13 @@ public class Book implements Serializable {
 
     public void setLinks(String links) {
         this.links = links;
+    }
+
+    public int getIdBook() {
+        return idBook;
+    }
+
+    public void setIdBook(int idBook) {
+        this.idBook = idBook;
     }
 }
