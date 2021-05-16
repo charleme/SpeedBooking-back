@@ -12,14 +12,14 @@ public class Genre implements Serializable {
     private Long idGenre;
 
     @Column(name = "name_genre", length = 45)
-    private String name;
+    private String nameGenre;
     
     public Genre() {
     	
     }
     
     public Genre(String name) {
-    	this.name = name;
+    	this.nameGenre = name;
     }
     
     @Id
@@ -31,12 +31,11 @@ public class Genre implements Serializable {
     	this.idGenre = id;
     }
     
-    public String getName() {
-    	return name;
+    public String getNameGenre() {
+    	return nameGenre;
     }
     
-    public void setName(String name) {
-    	this.name = name;
+    public void setNameGenre(String name) {
+    	this.nameGenre = name;
     }
-
 }
