@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 public class User implements Serializable {
@@ -26,8 +27,11 @@ public class User implements Serializable {
     @Column(name = "genres")
     private String genres;
 
-    @OneToMany(mappedBy="author")
-    private Collection<Book> books;
+    @OneToMany(mappedBy="author", fetch=FetchType.EAGER)
+    private Set<Book> books;
+
+    @OneToMany(mappedBy = "user", fetch=FetchType.EAGER)
+    private Set<UserBook> booksRead;
 
     public User() {
     }
@@ -40,7 +44,7 @@ public class User implements Serializable {
         this.genres = genres;
     }
 
-    public User(String username, String email, String password, Timestamp createTime, String genres, Collection<Book> books) {
+    public User(String username, String email, String password, Timestamp createTime, String genres, Set<Book> books) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -57,11 +61,11 @@ public class User implements Serializable {
         this.idUser = idUser;
     }
 
-    public Collection<Book> getBooks() {
+    public Set<Book> getBooks() {
         return books;
     }
 
-    public void setBooks(Collection<Book> books) {
+    public void setBooks(Set<Book> books) {
         this.books = books;
     }
 
@@ -103,5 +107,13 @@ public class User implements Serializable {
 
     public void setGenres(String genres) {
         this.genres = genres;
+    }
+
+    public Set<UserBook> getBooksRead() {
+        return booksRead;
+    }
+
+    public void setBooksRead(Set<UserBook> booksRead) {
+        this.booksRead = booksRead;
     }
 }

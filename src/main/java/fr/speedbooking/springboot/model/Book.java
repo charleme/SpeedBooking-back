@@ -1,7 +1,12 @@
 package fr.speedbooking.springboot.model;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Set;
 
 @Entity
 public class Book implements Serializable {
@@ -30,6 +35,12 @@ public class Book implements Serializable {
     @ManyToOne
     @JoinColumn(name="idAuthor")
     private User author;
+
+    @OneToMany(mappedBy = "book", fetch=FetchType.EAGER)
+    Set<UserBook> readers;
+
+    @OneToMany(mappedBy = "book", fetch=FetchType.EAGER)
+    Set<GenreBook> bookGenres;
 
     public Book() {
     }
@@ -106,5 +117,21 @@ public class Book implements Serializable {
 
     public void setIdBook(int idBook) {
         this.idBook = idBook;
+    }
+
+    public Set<UserBook> getReaders() {
+        return readers;
+    }
+
+    public void setReaders(Set<UserBook> readers) {
+        this.readers = readers;
+    }
+
+    public Set<GenreBook> getBookGenres() {
+        return bookGenres;
+    }
+
+    public void setBookGenres(Set<GenreBook> bookGenres) {
+        this.bookGenres = bookGenres;
     }
 }

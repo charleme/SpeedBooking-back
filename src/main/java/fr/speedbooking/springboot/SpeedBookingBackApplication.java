@@ -3,6 +3,8 @@ package fr.speedbooking.springboot;
 import java.sql.Timestamp;
 import java.util.List;
 
+import fr.speedbooking.springboot.model.Book;
+import fr.speedbooking.springboot.repository.BookRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -18,9 +20,15 @@ public class SpeedBookingBackApplication {
 	public static void main(String[] args) {
 		ApplicationContext ctx = SpringApplication.run(SpeedBookingBackApplication.class, args);
 		UserRepository userDao = ctx.getBean(UserRepository.class);
-		List<User> genres = userDao.findAll();
-		for(User u : genres) {
-			System.out.println("Team : "+ u.getUsername());
+		List<User> users = userDao.findAll();
+		for(User u : users) {
+			System.out.println("User : "+ u.getBooks());
+		}
+
+		BookRepository bookDao = ctx.getBean(BookRepository.class);
+		List<Book> books = bookDao.findAll();
+		for(Book u : books) {
+			System.out.println("Book : "+ u.getReaders());
 		}
 		
 	}
