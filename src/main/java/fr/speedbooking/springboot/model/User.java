@@ -5,7 +5,7 @@ import fr.speedbooking.springboot.front.UserInformation;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Collection;
+
 import java.util.Set;
 
 @Entity
@@ -39,6 +39,7 @@ public class User implements Serializable {
     private Set<UserBook> booksRead;
 
     public User() {
+        this.createTime = new Timestamp(System.currentTimeMillis());
     }
 
     public User(String username, String email, String password, String genres, String languages,
@@ -46,6 +47,7 @@ public class User implements Serializable {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.createTime = new Timestamp(System.currentTimeMillis());
         this.genres = genres;
         this.languages = languages;
         this.books = books;
