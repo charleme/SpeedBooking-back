@@ -34,6 +34,11 @@ public class BookController {
                 .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id :" + id)).parseToBookInformation();
         return book;
     }
+    
+    @GetMapping("/deleteBook/{id}")
+    public void deleteBookById(@PathVariable Long id){
+    	bookRepository.deleteById(id);
+    }
 
     //add book to the database
     @PostMapping("/addBook")
