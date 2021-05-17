@@ -28,7 +28,7 @@ public class BookController {
                 .collect(Collectors.toList());
     }
     
-    @GetMapping("/findUser/{id}")
+    @GetMapping("/findBook/{id}")
     public BookInformation getBookById(@PathVariable Long id){
         BookInformation book = bookRepository.findById(id)
                 .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id :" + id)).parseToBookInformation();
