@@ -1,10 +1,12 @@
 package fr.speedbooking.springboot.controller;
 
 
+import fr.speedbooking.springboot.exception.RessourceNotFoundException;
 import fr.speedbooking.springboot.front.BookInformation;
 import fr.speedbooking.springboot.model.Book;
 import fr.speedbooking.springboot.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +26,13 @@ public class BookController {
                 .stream()
                 .map(book -> book.parseToBookInformation())
                 .collect(Collectors.toList());
+    }
+    
+    @GetMapping("/findUser/{id}")
+    public BookInformation getBookById(@PathVariable Long id){
+        BookInformation book = bookRepository.findById(id)
+                .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id :" + id)).parseToBookInformation();
+        return book;
     }
 
     //add book to the database
