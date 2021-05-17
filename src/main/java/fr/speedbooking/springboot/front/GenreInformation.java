@@ -1,5 +1,6 @@
 package fr.speedbooking.springboot.front;
 
+import fr.speedbooking.springboot.model.Genre;
 import fr.speedbooking.springboot.model.GenreBook;
 
 import java.util.Collection;
@@ -31,5 +32,9 @@ public class GenreInformation {
 
     public void setNameGenre(String nameGenre) {
         this.nameGenre = nameGenre;
+    }
+
+    public Genre parseToGenre(){
+        return new Genre(this.nameGenre, null);
     }
 }

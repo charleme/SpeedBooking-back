@@ -1,13 +1,9 @@
 package fr.speedbooking.springboot.front;
 
 import fr.speedbooking.springboot.model.Book;
-import fr.speedbooking.springboot.model.GenreBook;
-import fr.speedbooking.springboot.model.User;
-import fr.speedbooking.springboot.model.UserBook;
-import fr.speedbooking.springboot.repository.UserRepository;
 
 public class BookInformation {
-    private int idBook;
+    private Long idBook;
 
     private String titleBook;
 
@@ -28,7 +24,7 @@ public class BookInformation {
     public BookInformation() {
     }
 
-    public BookInformation(int idBook, String titleBook, String language, String imageBook, String summaryBook, String firstChapter, String audienceTag, String links, Long id_author) {
+    public BookInformation(Long idBook, String titleBook, String language, String imageBook, String summaryBook, String firstChapter, String audienceTag, String links, Long id_author) {
         this.idBook = idBook;
         this.titleBook = titleBook;
         this.language = language;
@@ -40,11 +36,11 @@ public class BookInformation {
         this.id_author = id_author;
     }
 
-    public int getIdBook() {
+    public Long getIdBook() {
         return idBook;
     }
 
-    public void setIdBook(int idBook) {
+    public void setIdBook(Long idBook) {
         this.idBook = idBook;
     }
 

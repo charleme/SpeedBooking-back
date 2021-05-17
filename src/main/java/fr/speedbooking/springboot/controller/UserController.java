@@ -28,7 +28,7 @@ public class UserController {
 
     //add user to the database
     @PostMapping("/addUser")
-    public User createUser(@RequestBody UserInformation user){
-        return userRepository.save(user.parseToUser());
+    public User createUser(@RequestBody User user){
+        return userRepository.save(user);
     }
 }

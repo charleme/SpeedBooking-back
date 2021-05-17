@@ -1,5 +1,7 @@
 package fr.speedbooking.springboot.model;
 
+import fr.speedbooking.springboot.front.GenreInformation;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Set;
@@ -53,5 +55,7 @@ public class Genre implements Serializable {
     	this.nameGenre = name;
     }
 
-
+    public GenreInformation parseToGenreInformation(){
+        return new GenreInformation(this.idGenre, this.nameGenre);
+    }
 }

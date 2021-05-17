@@ -10,7 +10,7 @@ import java.util.Set;
 public class Book implements Serializable{
     @Id
     @GeneratedValue
-    private int idBook;
+    private Long idBook;
 
     @Column(name = "title_book")
     private String titleBook;
@@ -60,11 +60,11 @@ public class Book implements Serializable{
         this.bookGenres = bookGenres;
     }
 
-    public int getIdBook() {
+    public Long getIdBook() {
         return idBook;
     }
 
-    public void setIdBook(int idBook) {
+    public void setIdBook(Long idBook) {
         this.idBook = idBook;
     }
     
