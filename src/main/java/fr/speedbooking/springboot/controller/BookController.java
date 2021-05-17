@@ -36,8 +36,8 @@ public class BookController {
     }
 
     //add book to the database
-    @PostMapping("/addUser")
-    public Book createUser(@RequestBody Book book){
+    @PostMapping("/addBook")
+    public Book createBook(@RequestBody Book book){
         return bookRepository.save(book);
     }
 }
