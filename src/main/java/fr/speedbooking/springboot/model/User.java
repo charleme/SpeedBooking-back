@@ -1,11 +1,17 @@
 package fr.speedbooking.springboot.model;
 
 import fr.speedbooking.springboot.front.UserInformation;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -128,5 +134,22 @@ public class User implements Serializable {
 
     public UserInformation parseToUserInformation(){
         return new UserInformation(this.idUser, this.username, this.email, this.password, this.createTime, this.genres, this.languages);
+    }
+
+    public Map<String, Integer> getMappedGenres(){
+        try {
+            return new ObjectMapper().readValue(this.genres, HashMap.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return new HashMap<>();
+    }
+
+    public void setGenres(Map<String, Integer> mappedGenres){
+        try {
+            new ObjectMapper().writeValueAsString(mappedGenres);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 }
