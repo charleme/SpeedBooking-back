@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @CrossOrigin
@@ -29,10 +31,10 @@ public class UserController {
                 .collect(Collectors.toList());
     }
 
+    //get user by Id
     @GetMapping("/findUser/{id}")
     public ResponseEntity<UserInformation> getUserById(@PathVariable Long id){
-        UserInformation user = userRepository.findById(id)
-                .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id :" + id)).parseToUserInformation();
+        UserInformation user = findUserById(id).parseToUserInformation();
         return ResponseEntity.ok(user);
     }
 
@@ -42,9 +44,10 @@ public class UserController {
         return userRepository.save(user);
     }
 
+    //update user by id
     @PutMapping("/updateUser/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User newUser){
-        User user = userRepository.findById(id).orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id :" + id));
+        User user = findUserById(id);;
         user.setUsername(newUser.getUsername());
         user.setEmail(newUser.getEmail());
         user.setPassword(newUser.getPassword());
@@ -53,5 +56,21 @@ public class UserController {
 
         User updatedUser = userRepository.save(user);
         return ResponseEntity.ok(updatedUser);
+    }
+    //delete user
+    @DeleteMapping("/deleteUser/{id}")
+    public ResponseEntity<Map<String, Boolean>> deleteUser(@PathVariable Long id){
+        User user = findUserById(id);
+
+        userRepository.delete(user);
+
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted", Boolean.TRUE);
+
+        return ResponseEntity.ok(response);
+    }
+
+    public User findUserById(long id){
+        return userRepository.findById(id).orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id :" + id));
     }
 }
