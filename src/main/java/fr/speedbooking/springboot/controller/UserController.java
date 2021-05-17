@@ -23,7 +23,7 @@ public class UserController {
     private UserRepository userRepository;
 
     // get all users
-    @GetMapping("/users")
+    @GetMapping("/allUser")
     public List<UserInformation> getAllUser(){
         return userRepository.findAll()
                 .stream()
