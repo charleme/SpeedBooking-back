@@ -1,5 +1,7 @@
 package fr.speedbooking.springboot.model;
 
+import fr.speedbooking.springboot.front.BookInformation;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
@@ -136,5 +138,10 @@ public class Book implements Serializable{
 
     public void setBookGenres(Set<GenreBook> bookGenres) {
         this.bookGenres = bookGenres;
+    }
+
+    public BookInformation parseToBookInformation(){
+        Long idAuthor = this.author.getIdUser();
+        return new BookInformation(this.idBook, this.titleBook, this.language, this.imageBook, this.summaryBook, this.firstChapter, this.audienceTag, this.links, idAuthor);
     }
 }

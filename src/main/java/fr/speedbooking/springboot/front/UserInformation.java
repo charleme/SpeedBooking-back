@@ -1,55 +1,37 @@
-package fr.speedbooking.springboot.model;
+package fr.speedbooking.springboot.front;
 
-import fr.speedbooking.springboot.front.UserInformation;
+import fr.speedbooking.springboot.model.User;
 
-import javax.persistence.*;
-import java.io.Serializable;
+
 import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.Set;
 
-@Entity
-public class User implements Serializable {
-    @Id
-    @GeneratedValue
+
+public class UserInformation {
     private Long idUser;
 
-    @Column(name = "username")
     private String username;
 
-    @Column(name = "email")
     private String email;
 
-    @Column(name = "password")
     private String password;
 
-    @Column(name = "create_time")
     private Timestamp createTime;
 
-    @Column(name = "genres")
     private String genres;
 
-    @Column(name="languages")
     private String languages;
 
-    @OneToMany(mappedBy="author", fetch=FetchType.EAGER)
-    private Set<Book> books;
-
-    @OneToMany(mappedBy = "idUser", fetch=FetchType.EAGER)
-    private Set<UserBook> booksRead;
-
-    public User() {
+    public UserInformation() {
     }
 
-    public User(String username, String email, String password, String genres, String languages,
-                Set<Book> books, Set<UserBook> booksRead) {
+    public UserInformation(Long idUser, String username, String email, String password, Timestamp createTime, String genres, String languages) {
+        this.idUser = idUser;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.createTime = createTime;
         this.genres = genres;
         this.languages = languages;
-        this.books = books;
-        this.booksRead = booksRead;
     }
 
     public Long getIdUser() {
@@ -58,14 +40,6 @@ public class User implements Serializable {
 
     public void setIdUser(Long idUser) {
         this.idUser = idUser;
-    }
-
-    public Set<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(Set<Book> books) {
-        this.books = books;
     }
 
     public String getUsername() {
@@ -108,14 +82,6 @@ public class User implements Serializable {
         this.genres = genres;
     }
 
-    public Set<UserBook> getBooksRead() {
-        return booksRead;
-    }
-
-    public void setBooksRead(Set<UserBook> booksRead) {
-        this.booksRead = booksRead;
-    }
-
     public String getLanguages() {
         return languages;
     }
@@ -124,7 +90,10 @@ public class User implements Serializable {
         this.languages = languages;
     }
 
-    public UserInformation parseToUserInformation(){
-        return new UserInformation(this.idUser, this.username, this.email, this.password, this.createTime, this.genres, this.languages);
+    /*
+    send user without books written and read
+     */
+    public User parseToUser(){
+        return new User(this.username, this.email, this.password, this.genres, this.languages, null, null);
     }
 }
