@@ -1,17 +1,18 @@
 package fr.speedbooking.springboot.model;
 
-import com.vladmihalcea.hibernate.type.json.JsonType;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 @Entity
-@TypeDef(name = "json", typeClass = JsonType.class)
 public class User implements Serializable {
     @Id
     @GeneratedValue
@@ -29,7 +30,6 @@ public class User implements Serializable {
     @Column(name = "create_time")
     private Timestamp createTime;
 
-    @Type(type = "json")
     @Column(name = "genres", columnDefinition = "json")
     private String genres;
 
@@ -127,5 +127,22 @@ public class User implements Serializable {
 
     public void setLanguages(String languages) {
         this.languages = languages;
+    }
+
+    public Map<String, Integer> getMappedGenres(){
+        try {
+            return new ObjectMapper().readValue(this.genres, HashMap.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return new HashMap<>();
+    }
+
+    public void setGenres(Map<String, Integer> mappedGenres){
+        try {
+            new ObjectMapper().writeValueAsString(mappedGenres);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 }
