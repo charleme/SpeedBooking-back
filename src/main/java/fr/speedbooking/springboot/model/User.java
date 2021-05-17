@@ -1,12 +1,17 @@
 package fr.speedbooking.springboot.model;
 
+import com.vladmihalcea.hibernate.type.json.JsonType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
+@TypeDef(name = "json", typeClass = JsonType.class)
 public class User implements Serializable {
     @Id
     @GeneratedValue
@@ -24,7 +29,8 @@ public class User implements Serializable {
     @Column(name = "create_time")
     private Timestamp createTime;
 
-    @Column(name = "genres")
+    @Type(type = "json")
+    @Column(name = "genres", columnDefinition = "json")
     private String genres;
 
     @Column(name="languages")
