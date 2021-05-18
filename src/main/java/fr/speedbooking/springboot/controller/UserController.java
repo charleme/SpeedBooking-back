@@ -71,7 +71,7 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-    @GetMapping("/updateUser/{user_id}&{book_id}")
+    @PutMapping("/updateUser/{user_id}&{book_id}")
     public ResponseEntity<User> updateUserGenre(@PathVariable Long user_id, @PathVariable Long book_id){
         User user = findUserById(user_id);
         Book books = bookRepository.findById(book_id).orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id :" + book_id));

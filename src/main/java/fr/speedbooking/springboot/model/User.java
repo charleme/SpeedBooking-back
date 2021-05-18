@@ -36,7 +36,7 @@ public class User implements Serializable {
     @Column(name="languages")
     private String languages;
 
-    @OneToMany(mappedBy="author", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "author", fetch=FetchType.EAGER)
     private Set<Book> books;
 
     @OneToMany(mappedBy = "idUser", fetch=FetchType.EAGER)
