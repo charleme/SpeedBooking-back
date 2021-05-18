@@ -44,10 +44,15 @@ public class UserController {
         return userRepository.save(user);
     }
 
+//    @PostMapping("/addUser/{}")
+//    public User createUser(@RequestBody User user){
+//        return userRepository.save(user);
+//    }
+
     //update user by id
     @PutMapping("/updateUser/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User newUser){
-        User user = findUserById(id);;
+        User user = findUserById(id);
         user.setUsername(newUser.getUsername());
         user.setEmail(newUser.getEmail());
         user.setPassword(newUser.getPassword());
@@ -57,6 +62,7 @@ public class UserController {
         User updatedUser = userRepository.save(user);
         return ResponseEntity.ok(updatedUser);
     }
+
     //delete user
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteUser(@PathVariable Long id){

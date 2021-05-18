@@ -3,8 +3,6 @@ package fr.speedbooking.springboot.model;
 import fr.speedbooking.springboot.front.UserInformation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,6 +14,7 @@ import java.util.Set;
 
 @Entity
 public class User implements Serializable {
+
     @Id
     @GeneratedValue
     private Long idUser;
