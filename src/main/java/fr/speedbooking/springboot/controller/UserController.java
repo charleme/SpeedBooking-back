@@ -3,8 +3,11 @@ package fr.speedbooking.springboot.controller;
 
 import fr.speedbooking.springboot.front.UserInformation;
 import fr.speedbooking.springboot.exception.RessourceNotFoundException;
+import fr.speedbooking.springboot.model.Book;
 import fr.speedbooking.springboot.model.Genre;
+import fr.speedbooking.springboot.model.GenreBook;
 import fr.speedbooking.springboot.model.User;
+import fr.speedbooking.springboot.repository.BookRepository;
 import fr.speedbooking.springboot.repository.GenreRepository;
 import fr.speedbooking.springboot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,10 @@ public class UserController {
 
     @Autowired
     private GenreRepository genreRepository;
+
+    @Autowired
+    private BookRepository bookRepository;
+
 
     // get all users
     @GetMapping("/allUser")
@@ -62,6 +69,27 @@ public class UserController {
 
         User updatedUser = userRepository.save(user);
         return ResponseEntity.ok(updatedUser);
+    }
+
+    @GetMapping("/updateUser/{user_id}&{book_id}")
+    public void updateUserGenre(@PathVariable Long user_id, @PathVariable Long book_id){
+        User user = findUserById(user_id);
+        Book books = bookRepository.findById(book_id).orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id :" + book_id));
+        Map<String, Integer> newGenre = user.getMappedGenres();
+        System.out.println(user.getGenres());
+        for(GenreBook genreBook : books.getBookGenres()){
+            for(Map.Entry elem : newGenre.entrySet()){
+                if(elem.getKey().equals(genreBook.getIdGenre().getNameGenre())){
+                    newGenre.put(elem.getKey().toString(), (Integer)elem.getValue()  + (genreBook.getScore()*25/100));
+                }
+            }
+        }
+        System.out.println(newGenre);
+        user.setGenres(newGenre);
+        System.out.println(user.getMappedGenres());
+        System.out.println(user.getGenres());
+//        User updatedUser = userRepository.save(user);
+//        return ResponseEntity.ok(updatedUser);
     }
 
     //delete user
