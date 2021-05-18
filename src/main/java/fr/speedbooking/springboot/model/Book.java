@@ -18,7 +18,7 @@ public class Book implements Serializable{
     @Column(name = "language")
     private String language;
 
-    @Column(name = "image_book")
+	@Column(name = "image_book")
     private String imageBook;
 
     @Column(name = "summary_book")
@@ -67,6 +67,14 @@ public class Book implements Serializable{
     public void setIdBook(Long idBook) {
         this.idBook = idBook;
     }
+    
+    public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
     
     public User getAuthor() {
         return author;
