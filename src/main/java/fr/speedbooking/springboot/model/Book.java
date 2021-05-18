@@ -1,9 +1,13 @@
 package fr.speedbooking.springboot.model;
 
 import fr.speedbooking.springboot.front.BookInformation;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -18,7 +22,7 @@ public class Book implements Serializable{
     @Column(name = "language")
     private String language;
 
-    @Column(name = "image_book")
+	@Column(name = "image_book")
     private String imageBook;
 
     @Column(name = "summary_book")
@@ -67,6 +71,14 @@ public class Book implements Serializable{
     public void setIdBook(Long idBook) {
         this.idBook = idBook;
     }
+    
+    public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
     
     public User getAuthor() {
         return author;
@@ -143,5 +155,22 @@ public class Book implements Serializable{
     public BookInformation parseToBookInformation(){
         Long idAuthor = this.author.getIdUser();
         return new BookInformation(this.idBook, this.titleBook, this.language, this.imageBook, this.summaryBook, this.firstChapter, this.audienceTag, this.links, idAuthor);
+    }
+
+    public Map<String, Integer> getMappedAudienceTag(){
+        try {
+            return new ObjectMapper().readValue(this.audienceTag, HashMap.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return new HashMap<>();
+    }
+
+    public void setAudienceTag(Map<String, Integer> audienceTag){
+        try {
+            new ObjectMapper().writeValueAsString(audienceTag);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 }
