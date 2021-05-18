@@ -15,7 +15,7 @@ import java.util.Set;
 public class Book implements Serializable{
     public static final int AUDIENCE_TAG_INCREMENT = 1;
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long idBook;
 
     @Column(name = "title_book")
@@ -24,7 +24,7 @@ public class Book implements Serializable{
     @Column(name = "language")
     private String language;
 
-    @Column(name = "image_book")
+	@Column(name = "image_book")
     private String imageBook;
 
     @Column(name = "summary_book")
@@ -73,6 +73,14 @@ public class Book implements Serializable{
     public void setIdBook(Long idBook) {
         this.idBook = idBook;
     }
+    
+    public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
     
     public User getAuthor() {
         return author;

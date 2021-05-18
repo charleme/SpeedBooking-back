@@ -15,7 +15,7 @@ public class User implements Serializable {
     public static final int NUMBER_PREFERRED_GENRES_ANALYSED = 3;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long idUser;
 
     @Column(name = "username")
