@@ -10,12 +10,11 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class User implements Serializable {
+    public static final int NUMBER_PREFERRED_GENRES_ANALYSED = 3;
     @Id
     @GeneratedValue
     private Long idUser;
@@ -147,9 +146,39 @@ public class User implements Serializable {
 
     public void setGenres(Map<String, Integer> mappedGenres){
         try {
-            new ObjectMapper().writeValueAsString(mappedGenres);
+            this.genres = new ObjectMapper().writeValueAsString(mappedGenres);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<String> getPreferredGenres(){
+        List<String> preferredGenres = new ArrayList<>();
+
+        Map<String, Integer> genres = this.getMappedGenres();
+
+        Comparator<String> valueComparator = new Comparator<String>() {
+            public int compare(String k1, String k2) {
+                Integer v1 = genres.get(k1);
+                Integer v2 = genres.get(k2);
+                int compare = v2.compareTo(v1); //DESC
+                if (compare == 0) {
+                    return 1;
+                } else {
+                    return compare;
+                }
+
+            }
+        };
+
+        TreeMap<String,Integer> sortedByValues = new TreeMap<>(valueComparator);
+
+        sortedByValues.putAll(genres);
+
+        for (int i = 0; i < NUMBER_PREFERRED_GENRES_ANALYSED; i++) {
+            preferredGenres.add(sortedByValues.pollFirstEntry().getKey());
+        }
+
+        return preferredGenres;
     }
 }

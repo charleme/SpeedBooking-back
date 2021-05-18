@@ -7,11 +7,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 @Entity
 public class Book implements Serializable{
+    public static final int AUDIENCE_TAG_INCREMENT = 1;
     @Id
     @GeneratedValue
     private Long idBook;
@@ -160,9 +162,22 @@ public class Book implements Serializable{
 
     public void setAudienceTag(Map<String, Integer> audienceTag){
         try {
-            new ObjectMapper().writeValueAsString(audienceTag);
+            this.audienceTag = new ObjectMapper().writeValueAsString(audienceTag);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+    }
+
+    public void applyChangeAlgorithm(boolean like, List<String> userPreferredGenres){
+        int changeValue = (like) ? AUDIENCE_TAG_INCREMENT : -AUDIENCE_TAG_INCREMENT;
+
+        Map<String, Integer> mappedAudienceTag = this.getMappedAudienceTag();
+
+        for (String genre :
+                userPreferredGenres) {
+            mappedAudienceTag.put(genre, mappedAudienceTag.get(genre)+changeValue);
+        }
+
+        this.setAudienceTag(mappedAudienceTag);
     }
 }
