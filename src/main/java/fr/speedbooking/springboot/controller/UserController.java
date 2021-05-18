@@ -78,16 +78,13 @@ public class UserController {
         Map<String, Integer> newGenre = user.getMappedGenres();
         System.out.println(user.getGenres());
         for(GenreBook genreBook : books.getBookGenres()){
-            for(Map.Entry elem : newGenre.entrySet()){
-                if(elem.getKey().equals(genreBook.getIdGenre().getNameGenre())){
-                    newGenre.put(elem.getKey().toString(), (Integer)elem.getValue()  + (genreBook.getScore()*25/100));
-                }
-            }
+                    String genreName = genreBook.getIdGenre().getNameGenre();
+                    newGenre.put(genreName, newGenre.get(genreName) + (genreBook.getScore()*25/100));
         }
         System.out.println(newGenre);
         user.setGenres(newGenre);
-        System.out.println(user.getMappedGenres());
         System.out.println(user.getGenres());
+        System.out.println(user.getMappedGenres());
 //        User updatedUser = userRepository.save(user);
 //        return ResponseEntity.ok(updatedUser);
     }
