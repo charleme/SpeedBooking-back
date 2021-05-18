@@ -49,14 +49,14 @@ public class BookController {
 
     //add book to the database
     @PostMapping("/addBook")
-    public Book createBook(@RequestBody Book book){
-        return bookRepository.save(book);
+    public ResponseEntity<Book> createBook(@RequestBody Book book){
+        return ResponseEntity.ok(bookRepository.save(book));
     }
     
     
     //update book informations
     @PutMapping("/updateBook/{id}")
-    public Book updateBook(@PathVariable Long id, @RequestBody Book updateBook){
+    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book updateBook){
         Book book = bookRepository.findById(id)
         		.orElseThrow(() -> new RessourceNotFoundException("Book does not exist at the id :" + id));
         book.setBookTitle(updateBook.getBookTitle());
@@ -70,6 +70,6 @@ public class BookController {
         book.setReaders(updateBook.getReaders());
         book.setBookGenres(updateBook.getBookGenres());
         
-        return bookRepository.save(book);
+        return ResponseEntity.ok(bookRepository.save(book));
     }
 }
