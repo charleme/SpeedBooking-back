@@ -174,7 +174,7 @@ public class User implements Serializable {
 
         sortedByValues.putAll(genres);
 
-        for (int i = 0; i < NUMBER_PREFERRED_GENRES_ANALYSED; i++) {
+        for (int i = 0; i < Math.min(NUMBER_PREFERRED_GENRES_ANALYSED, genres.size()); i++) {
             preferredGenres.add(sortedByValues.pollFirstEntry().getKey());
         }
 

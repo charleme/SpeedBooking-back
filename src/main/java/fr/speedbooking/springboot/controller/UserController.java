@@ -52,8 +52,8 @@ public class UserController {
     }
 
     @PostMapping("/addUser")
-    public User createUserFinal(@RequestBody User user, @RequestBody String[] list){
-        user.setGenres(buildMappedGenres(list));
+    public User createUserFinal(@RequestBody User user){
+//        user.setGenres(buildMappedGenres(list));
         return userRepository.save(user);
     }
 
