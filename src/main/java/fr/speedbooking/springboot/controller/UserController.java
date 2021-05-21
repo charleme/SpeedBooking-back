@@ -1,6 +1,7 @@
 package fr.speedbooking.springboot.controller;
 
 
+import fr.speedbooking.springboot.controller.dataStructure.CreateUserData;
 import fr.speedbooking.springboot.front.UserInformation;
 import fr.speedbooking.springboot.exception.RessourceNotFoundException;
 import fr.speedbooking.springboot.model.Book;
@@ -52,9 +53,9 @@ public class UserController {
     }
 
     @PostMapping("/addUser")
-    public User createUserFinal(@RequestBody User user){
-//        user.setGenres(buildMappedGenres(list));
-        return userRepository.save(user);
+    public User createUserFinal(@RequestBody CreateUserData createUserData){
+        createUserData.user.setGenres(buildMappedGenres(createUserData.list));
+        return userRepository.save(createUserData.user);
     }
 
     //update user by id
