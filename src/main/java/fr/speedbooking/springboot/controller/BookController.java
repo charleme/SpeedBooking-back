@@ -55,8 +55,8 @@ public class BookController {
 
     //add book to the database
     @PostMapping("/addBook")
-    public ResponseEntity<Book> createBook(@RequestBody Book book){
-        return ResponseEntity.ok(bookRepository.save(book));
+    public ResponseEntity<Book> createBook(@RequestBody BookInformation book){
+        return ResponseEntity.ok(bookRepository.save(book.parseToBook(userRepository)));
     }
     
     

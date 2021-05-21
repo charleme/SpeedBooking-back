@@ -1,6 +1,11 @@
 package fr.speedbooking.springboot.front;
 
 import fr.speedbooking.springboot.model.Book;
+import fr.speedbooking.springboot.model.User;
+import fr.speedbooking.springboot.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Optional;
 
 public class BookInformation {
     private Long idBook;
@@ -108,8 +113,12 @@ public class BookInformation {
         this.id_author = id_author;
     }
 
-    public Book parseToBook(){
+    public Book parseToBook(UserRepository userRepository){
+        Optional<User> user = userRepository.findById((this.id_author));
+        if(user.isEmpty())
+            throw new IllegalArgumentException("id author invalid");
+
         return new Book(this.titleBook, this.language, this.imageBook, this.summaryBook, this.firstChapter,
-                this.audienceTag, this.links, null, null, null);
+                this.audienceTag, this.links, user.get(), null, null);
     }
 }
