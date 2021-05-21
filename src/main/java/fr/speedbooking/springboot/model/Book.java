@@ -18,7 +18,7 @@ public class Book implements Serializable{
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long idBook;
 
-    @Column(name = "title_book")
+    @Column
     private String titleBook;
     
     @Column(name = "language")
@@ -73,7 +73,31 @@ public class Book implements Serializable{
     public void setIdBook(Long idBook) {
         this.idBook = idBook;
     }
-    
+
+    public String getTitleBook() {
+        return titleBook;
+    }
+
+    public void setTitleBook(String titleBook) {
+        this.titleBook = titleBook;
+    }
+
+    public String getImageBook() {
+        return imageBook;
+    }
+
+    public void setImageBook(String imageBook) {
+        this.imageBook = imageBook;
+    }
+
+    public String getSummaryBook() {
+        return summaryBook;
+    }
+
+    public void setSummaryBook(String summaryBook) {
+        this.summaryBook = summaryBook;
+    }
+
     public String getLanguage() {
 		return language;
 	}
