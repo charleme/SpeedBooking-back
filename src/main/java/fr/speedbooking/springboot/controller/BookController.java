@@ -8,6 +8,7 @@ import fr.speedbooking.springboot.model.User;
 import fr.speedbooking.springboot.repository.BookRepository;
 import fr.speedbooking.springboot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +33,7 @@ public class BookController {
     public List<BookInformation> getAllBooks(){
         return bookRepository.findAll()
                 .stream()
-                .map(book -> book.parseToBookInformation())
+                .map(Book::parseToBookInformation)
                 .collect(Collectors.toList());
     }
     
@@ -55,8 +56,9 @@ public class BookController {
 
     //add book to the database
     @PostMapping("/addBook")
-    public ResponseEntity<Book> createBook(@RequestBody BookInformation book){
-        return ResponseEntity.ok(bookRepository.save(book.parseToBook(userRepository)));
+    public ResponseEntity<BookInformation> createBook(@RequestBody BookInformation book){
+        Book createdBook = bookRepository.save(book.parseToBook(userRepository));
+        return ResponseEntity.ok(createdBook.parseToBookInformation());
     }
     
     
@@ -79,31 +81,35 @@ public class BookController {
         return ResponseEntity.ok(bookRepository.save(book));
     }
 
-    @PutMapping("/likeBook/{id}")
-    public ResponseEntity<Book> likeBook(@PathVariable Long idBook, @RequestBody Long idUser){
+    @PutMapping( "/likeBook/{idBook}&{idUser}")
+    public ResponseEntity<String> likeBook(@PathVariable Long idBook, @PathVariable Long idUser){
         return updateAudienceTag(idBook, idUser, true);
     }
 
 
 
-    @PutMapping("/dislikeBook/{id}")
-    public ResponseEntity<Book> dislikeBook(@PathVariable Long idBook, @RequestBody Long idUser){
+    @PutMapping("/dislikeBook/{idBook}&{idUser}")
+    public ResponseEntity<String> dislikeBook(@PathVariable Long idBook, @PathVariable Long idUser){
         return updateAudienceTag(idBook, idUser, false);
     }
 
-    private ResponseEntity<Book> updateAudienceTag(Long idBook, Long idUser, boolean like) {
+    private ResponseEntity<String> updateAudienceTag(Long idBook, Long idUser, boolean like) {
         Optional<User> user = userRepository.findById(idUser);
         Optional<Book> book = bookRepository.findById(idBook);
 
-        if(!user.isPresent()){
+        if(user.isEmpty()){
             throw new IllegalArgumentException("id user doesn't exist");
-        }else if(!book.isPresent()) {
+        }else if(book.isEmpty()) {
             throw new IllegalArgumentException("id book doesn't exist");
         }
 
         book.get().applyChangeAlgorithm(like, user.get().getPreferredGenres());
 
         Book updatedBook = bookRepository.save(book.get());
-        return ResponseEntity.ok(updatedBook);
+
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("updated", Boolean.TRUE);
+
+        return ResponseEntity.ok(updatedBook.getAudienceTag());
     }
 }
