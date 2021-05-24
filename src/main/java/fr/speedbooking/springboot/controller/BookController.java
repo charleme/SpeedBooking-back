@@ -4,17 +4,19 @@ package fr.speedbooking.springboot.controller;
 import fr.speedbooking.springboot.exception.RessourceNotFoundException;
 import fr.speedbooking.springboot.front.BookInformation;
 import fr.speedbooking.springboot.model.Book;
+import fr.speedbooking.springboot.model.GenreBook;
 import fr.speedbooking.springboot.model.User;
+import fr.speedbooking.springboot.model.UserBook;
 import fr.speedbooking.springboot.repository.BookRepository;
+import fr.speedbooking.springboot.repository.GenreBookRepository;
+import fr.speedbooking.springboot.repository.UserBookRepository;
 import fr.speedbooking.springboot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -28,6 +30,12 @@ public class BookController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserBookRepository userBookRepository;
+
+    @Autowired
+    private GenreBookRepository genreBookRepository;
 
     @GetMapping("/books")
     public List<BookInformation> getAllBooks(){
@@ -48,6 +56,19 @@ public class BookController {
     public ResponseEntity<Map<String, Boolean>> deleteBookById(@PathVariable Long id){
     	Map<String, Boolean> response = new HashMap<>();
     	response.put("deleted", Boolean.TRUE);
+
+        List<GenreBook> bookGenres = bookRepository.findGenreBooksByBookId(id);
+        List<UserBook> userBooks = bookRepository.findUserBooksByBookId(id);
+
+        if(bookGenres != null)
+            for (GenreBook bookGenre : bookGenres) {
+                genreBookRepository.delete(bookGenre);
+            }
+
+        if(userBooks != null)
+            for (UserBook userBook: userBooks) {
+                userBookRepository.delete(userBook);
+            }
     	
     	bookRepository.deleteById(id);
     	
@@ -63,22 +84,9 @@ public class BookController {
     
     
     //update book informations
-    @PutMapping("/updateBook/{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book updateBook){
-        Book book = bookRepository.findById(id)
-        		.orElseThrow(() -> new RessourceNotFoundException("Book does not exist at the id :" + id));
-        book.setBookTitle(updateBook.getBookTitle());
-        book.setLanguage(updateBook.getLanguage());
-        book.setBookImage(updateBook.getBookImage());
-        book.setSummary(updateBook.getSummary());
-        book.setFirstChapter(updateBook.getFirstChapter());
-        book.setAudienceTag(updateBook.getAudienceTag());
-        book.setLinks(updateBook.getLinks());
-        book.setAuthor(updateBook.getAuthor());
-        book.setReaders(updateBook.getReaders());
-        book.setBookGenres(updateBook.getBookGenres());
-        
-        return ResponseEntity.ok(bookRepository.save(book));
+    @PutMapping("/updateBook")
+    public ResponseEntity<BookInformation> updateBook(@RequestBody BookInformation updateBook){
+        return ResponseEntity.ok(updateBook.updateBookWithBookInformation(bookRepository, userRepository));
     }
 
     @PutMapping( "/likeBook/{idBook}&{idUser}")
@@ -86,29 +94,21 @@ public class BookController {
         return updateAudienceTag(idBook, idUser, true);
     }
 
-
-
     @PutMapping("/dislikeBook/{idBook}&{idUser}")
     public ResponseEntity<String> dislikeBook(@PathVariable Long idBook, @PathVariable Long idUser){
         return updateAudienceTag(idBook, idUser, false);
     }
 
     private ResponseEntity<String> updateAudienceTag(Long idBook, Long idUser, boolean like) {
-        Optional<User> user = userRepository.findById(idUser);
-        Optional<Book> book = bookRepository.findById(idBook);
+        User user = userRepository.findById(idUser)
+                .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id : " + idUser));
 
-        if(user.isEmpty()){
-            throw new IllegalArgumentException("id user doesn't exist");
-        }else if(book.isEmpty()) {
-            throw new IllegalArgumentException("id book doesn't exist");
-        }
+        Book book = bookRepository.findById(idBook)
+                .orElseThrow(() -> new RessourceNotFoundException("Book does not exist at the id : " + idBook));
 
-        book.get().applyChangeAlgorithm(like, user.get().getPreferredGenres());
+        book.applyChangeAlgorithm(like, user.getPreferredGenres());
 
-        Book updatedBook = bookRepository.save(book.get());
-
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("updated", Boolean.TRUE);
+        Book updatedBook = bookRepository.save(book);
 
         return ResponseEntity.ok(updatedBook.getAudienceTag());
     }

@@ -3,12 +3,10 @@ package fr.speedbooking.springboot.controller;
 
 import fr.speedbooking.springboot.front.UserInformation;
 import fr.speedbooking.springboot.exception.RessourceNotFoundException;
-import fr.speedbooking.springboot.model.Book;
-import fr.speedbooking.springboot.model.Genre;
-import fr.speedbooking.springboot.model.GenreBook;
-import fr.speedbooking.springboot.model.User;
+import fr.speedbooking.springboot.model.*;
 import fr.speedbooking.springboot.repository.BookRepository;
 import fr.speedbooking.springboot.repository.GenreRepository;
+import fr.speedbooking.springboot.repository.UserBookRepository;
 import fr.speedbooking.springboot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +31,9 @@ public class UserController {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private UserBookRepository userBookRepository;
 
 
     // get all users
@@ -91,6 +92,18 @@ public class UserController {
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteUser(@PathVariable Long id){
         User user = findUserById(id);
+        List<Book> writtenBooks = userRepository.findWrittenBooksByUserId(id);
+        List<UserBook> userBooks = userRepository.findUserBooksByUserId(id);
+
+        if(writtenBooks != null)
+            for (Book book : writtenBooks) {
+                bookRepository.delete(book);
+            }
+
+        if(userBooks != null)
+            for (UserBook readBook: userBooks) {
+                userBookRepository.delete(readBook);
+            }
 
         userRepository.delete(user);
 

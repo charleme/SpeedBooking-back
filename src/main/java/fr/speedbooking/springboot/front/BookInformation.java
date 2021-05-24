@@ -1,7 +1,9 @@
 package fr.speedbooking.springboot.front;
 
+import fr.speedbooking.springboot.exception.RessourceNotFoundException;
 import fr.speedbooking.springboot.model.Book;
 import fr.speedbooking.springboot.model.User;
+import fr.speedbooking.springboot.repository.BookRepository;
 import fr.speedbooking.springboot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -114,11 +116,29 @@ public class BookInformation {
     }
 
     public Book parseToBook(UserRepository userRepository){
-        Optional<User> user = userRepository.findById((this.id_author));
-        if(user.isEmpty())
-            throw new IllegalArgumentException("id author invalid");
+        User user = userRepository.findById((this.id_author))
+                .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id : " + this.id_author));
 
         return new Book(this.titleBook, this.language, this.imageBook, this.summaryBook, this.firstChapter,
-                this.audienceTag, this.links, user.get(), null, null);
+                this.audienceTag, this.links, user, null, null);
+    }
+
+    public BookInformation updateBookWithBookInformation(BookRepository bookRepository, UserRepository userRepository){
+        Book book = bookRepository.findById(this.idBook)
+                .orElseThrow(() -> new RessourceNotFoundException("Book does not exist at the id : " + this.idBook));
+
+        User user = userRepository.findById(this.id_author)
+                .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id : " + this.id_author));
+
+        book.setBookTitle(this.titleBook);
+        book.setBookImage(this.imageBook);
+        book.setLanguage(this.language);
+        book.setFirstChapter(this.firstChapter);
+        book.setAudienceTag(this.audienceTag);
+        book.setLinks(this.links);
+        book.setAuthor(user);
+        Book updateBook = bookRepository.save(book);
+
+        return updateBook.parseToBookInformation();
     }
 }
