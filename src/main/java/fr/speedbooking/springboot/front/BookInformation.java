@@ -133,6 +133,7 @@ public class BookInformation {
         book.setBookTitle(this.titleBook);
         book.setBookImage(this.imageBook);
         book.setLanguage(this.language);
+        book.setSummaryBook(this.summaryBook);
         book.setFirstChapter(this.firstChapter);
         book.setAudienceTag(this.audienceTag);
         book.setLinks(this.links);

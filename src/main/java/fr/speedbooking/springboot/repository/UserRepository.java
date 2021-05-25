@@ -1,5 +1,6 @@
 package fr.speedbooking.springboot.repository;
 
+import fr.speedbooking.springboot.data.ReadBookWithProgress;
 import fr.speedbooking.springboot.model.Book;
 import fr.speedbooking.springboot.model.User;
 import fr.speedbooking.springboot.model.UserBook;
@@ -27,4 +28,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "JOIN ub.idUser u " +
             "WHERE u.idUser = :userId")
     List<UserBook> findUserBooksByUserId(@Param("userId") Long id);
+
+    @Query("SELECT " +
+            "new fr.speedbooking.springboot.data.ReadBookWithProgress(ub.progress, b) " +
+            "FROM UserBook ub " +
+            "JOIN ub.idUser u " +
+            "JOIN ub.idBook b " +
+            "WHERE u.idUser = :userId")
+    List<ReadBookWithProgress> getReadBooksWithProgress(@Param("userId") Long id);
 }

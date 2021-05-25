@@ -1,8 +1,10 @@
 package fr.speedbooking.springboot.controller;
 
 
+import fr.speedbooking.springboot.data.GenreWithScore;
 import fr.speedbooking.springboot.exception.RessourceNotFoundException;
 import fr.speedbooking.springboot.front.BookInformation;
+import fr.speedbooking.springboot.front.GenreInformationWithScore;
 import fr.speedbooking.springboot.model.Book;
 import fr.speedbooking.springboot.model.GenreBook;
 import fr.speedbooking.springboot.model.User;
@@ -87,6 +89,14 @@ public class BookController {
     @PutMapping("/updateBook")
     public ResponseEntity<BookInformation> updateBook(@RequestBody BookInformation updateBook){
         return ResponseEntity.ok(updateBook.updateBookWithBookInformation(bookRepository, userRepository));
+    }
+
+    @GetMapping("/bookGenresWithScore/{idBook}")
+    public List<GenreInformationWithScore> getBookGenresWithScore(@PathVariable Long idBook){
+        return bookRepository.getGenreBooksWithScore(idBook)
+                .stream()
+                .map(GenreWithScore::parseToGenreInformation)
+                .collect(Collectors.toList());
     }
 
     @PutMapping( "/likeBook/{idBook}&{idUser}")
