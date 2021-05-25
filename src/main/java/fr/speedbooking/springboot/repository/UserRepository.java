@@ -36,4 +36,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "JOIN ub.idBook b " +
             "WHERE u.idUser = :userId")
     List<ReadBookWithProgress> getReadBooksWithProgress(@Param("userId") Long id);
+    
+	@Query("select user from User user where user.email = :email and user.password = :mdp")
+	public User findByEmailAndPassword(@Param("email")String login, @Param("mdp") String mdp);
 }
