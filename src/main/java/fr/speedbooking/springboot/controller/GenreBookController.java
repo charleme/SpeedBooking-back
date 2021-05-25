@@ -31,16 +31,13 @@ public class GenreBookController {
     }
 
     @PutMapping("/updateScore/{idGenre}&{idBook}&{score}")
-    public ResponseEntity<Map<String, Integer>> updateScore(@PathVariable Long idGenre, @PathVariable Long idBook, @PathVariable int score){
+    public ResponseEntity<Integer> updateScore(@PathVariable Long idGenre, @PathVariable Long idBook, @PathVariable int score){
         GenreBook genreBook = genreBookRepository.getGenreBookByGenreIdAndBookId(idGenre, idBook);
 
         genreBook.setScore(score);
         genreBookRepository.save(genreBook);
 
-        Map<String, Integer> response = new HashMap<>();
-        response.put("score", genreBook.getScore());
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(genreBook.getScore());
     }
 
     @PostMapping("/createGenreBook/{idGenre}&{idBook}&{score}")
