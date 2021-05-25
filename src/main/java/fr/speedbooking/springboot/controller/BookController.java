@@ -100,16 +100,16 @@ public class BookController {
     }
 
     @PutMapping( "/likeBook/{idBook}&{idUser}")
-    public ResponseEntity<String> likeBook(@PathVariable Long idBook, @PathVariable Long idUser){
+    public ResponseEntity<Map<String, Integer>> likeBook(@PathVariable Long idBook, @PathVariable Long idUser){
         return updateAudienceTag(idBook, idUser, true);
     }
 
     @PutMapping("/dislikeBook/{idBook}&{idUser}")
-    public ResponseEntity<String> dislikeBook(@PathVariable Long idBook, @PathVariable Long idUser){
+    public ResponseEntity<Map<String, Integer>> dislikeBook(@PathVariable Long idBook, @PathVariable Long idUser){
         return updateAudienceTag(idBook, idUser, false);
     }
 
-    private ResponseEntity<String> updateAudienceTag(Long idBook, Long idUser, boolean like) {
+    private ResponseEntity<Map<String, Integer>> updateAudienceTag(Long idBook, Long idUser, boolean like) {
         User user = userRepository.findById(idUser)
                 .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id : " + idUser));
 
@@ -120,6 +120,6 @@ public class BookController {
 
         Book updatedBook = bookRepository.save(book);
 
-        return ResponseEntity.ok(updatedBook.getAudienceTag());
+        return ResponseEntity.ok(updatedBook.getMappedAudienceTag());
     }
 }
