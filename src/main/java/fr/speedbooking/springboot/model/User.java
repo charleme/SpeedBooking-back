@@ -135,7 +135,8 @@ public class User implements Serializable {
     }
 
     public UserInformation parseToUserInformation(){
-        return new UserInformation(this.idUser, this.username, this.email, this.password, this.createTime, this.genres, this.languages);
+        return new UserInformation(this.idUser, this.username, this.email, this.password, this.createTime,
+                this.getMappedGenres(), this.languages);
     }
 
     public Map<String, Integer> getMappedGenres(){

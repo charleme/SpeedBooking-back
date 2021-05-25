@@ -36,16 +36,13 @@ public class UserBookController {
     }
 
     @PutMapping("/updateProgress/{idUser}&{idBook}&{progress}")
-    public ResponseEntity<Map<String, Integer>> updateProgress(@PathVariable Long idUser, @PathVariable Long idBook, @PathVariable int progress){
+    public ResponseEntity<Integer> updateProgress(@PathVariable Long idUser, @PathVariable Long idBook, @PathVariable int progress){
         UserBook userBook = userBookRepository.getUserBookByUserIdAndBookId(idUser, idBook);
 
         userBook.setProgress(progress);
         userBookRepository.save(userBook);
 
-        Map<String, Integer> response = new HashMap<>();
-        response.put("progress", userBook.getProgress());
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(userBook.getProgress());
     }
 
     @PostMapping("/createUserBook/{idUser}&{idBook}")

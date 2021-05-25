@@ -1,10 +1,9 @@
 package fr.speedbooking.springboot.controller;
 
 
-import fr.speedbooking.springboot.data.GenreWithScore;
+import fr.speedbooking.springboot.front.GenreWithScore;
 import fr.speedbooking.springboot.exception.RessourceNotFoundException;
 import fr.speedbooking.springboot.front.BookInformation;
-import fr.speedbooking.springboot.front.GenreInformationWithScore;
 import fr.speedbooking.springboot.model.Book;
 import fr.speedbooking.springboot.model.GenreBook;
 import fr.speedbooking.springboot.model.User;
@@ -92,24 +91,21 @@ public class BookController {
     }
 
     @GetMapping("/bookGenresWithScore/{idBook}")
-    public List<GenreInformationWithScore> getBookGenresWithScore(@PathVariable Long idBook){
-        return bookRepository.getGenreBooksWithScore(idBook)
-                .stream()
-                .map(GenreWithScore::parseToGenreInformation)
-                .collect(Collectors.toList());
+    public List<GenreWithScore> getBookGenresWithScore(@PathVariable Long idBook){
+        return bookRepository.getGenreBooksWithScore(idBook);
     }
 
     @PutMapping( "/likeBook/{idBook}&{idUser}")
-    public ResponseEntity<String> likeBook(@PathVariable Long idBook, @PathVariable Long idUser){
+    public ResponseEntity<Map<String, Integer>> likeBook(@PathVariable Long idBook, @PathVariable Long idUser){
         return updateAudienceTag(idBook, idUser, true);
     }
 
     @PutMapping("/dislikeBook/{idBook}&{idUser}")
-    public ResponseEntity<String> dislikeBook(@PathVariable Long idBook, @PathVariable Long idUser){
+    public ResponseEntity<Map<String, Integer>> dislikeBook(@PathVariable Long idBook, @PathVariable Long idUser){
         return updateAudienceTag(idBook, idUser, false);
     }
 
-    private ResponseEntity<String> updateAudienceTag(Long idBook, Long idUser, boolean like) {
+    private ResponseEntity<Map<String, Integer>> updateAudienceTag(Long idBook, Long idUser, boolean like) {
         User user = userRepository.findById(idUser)
                 .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id : " + idUser));
 
@@ -120,6 +116,6 @@ public class BookController {
 
         Book updatedBook = bookRepository.save(book);
 
-        return ResponseEntity.ok(updatedBook.getAudienceTag());
+        return ResponseEntity.ok(updatedBook.getMappedAudienceTag());
     }
 }
