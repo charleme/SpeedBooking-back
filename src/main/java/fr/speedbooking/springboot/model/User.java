@@ -122,6 +122,10 @@ public class User implements Serializable {
         this.booksRead = booksRead;
     }
 
+    public void addValueToBooksRead(UserBook userBook){
+        this.booksRead.add(userBook);
+    }
+
     public String getLanguages() {
         return languages;
     }
