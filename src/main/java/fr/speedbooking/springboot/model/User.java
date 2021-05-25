@@ -9,10 +9,13 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 import java.util.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 public class User implements Serializable {
     public static final int NUMBER_PREFERRED_GENRES_ANALYSED = 3;
+    public static final String PREFIX = "fa";
+    public static final String SUFIX = "thi";
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -95,7 +98,9 @@ public class User implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        this.password = passwordEncoder.encode(PREFIX + password + SUFIX);
+        //this.password = password;
     }
 
     public Timestamp getCreateTime() {
