@@ -146,20 +146,38 @@ public class BookInformation {
     }
 
     public BookInformation updateBookWithBookInformation(BookRepository bookRepository, UserRepository userRepository){
+        User user;
+
         Book book = bookRepository.findById(this.idBook)
                 .orElseThrow(() -> new RessourceNotFoundException("Book does not exist at the id : " + this.idBook));
 
-        User user = userRepository.findById(this.id_author)
-                .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id : " + this.id_author));
+        if(this.id_author != null) {
+            user = userRepository.findById(this.id_author)
+                    .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id : " + this.id_author));
+            book.setAuthor(user);
+        }
 
-        book.setBookTitle(this.titleBook);
-        book.setBookImage(this.imageBook);
-        book.setLanguage(this.language);
-        book.setSummaryBook(this.summaryBook);
-        book.setFirstChapter(this.firstChapter);
-        book.setAudienceTag(this.audienceTag);
-        book.setLinks(this.links);
-        book.setAuthor(user);
+        if(this.titleBook!= null && !(this.titleBook.equals("")))
+            book.setBookTitle(this.titleBook);
+
+        if(this.imageBook!= null && !(this.imageBook.equals("")))
+            book.setBookImage(this.imageBook);
+
+        if(this.language!= null && !(this.language.equals("")))
+            book.setLanguage(this.language);
+
+        if(this.summaryBook!= null && !(this.summaryBook.equals("")))
+            book.setSummaryBook(this.summaryBook);
+
+        if(this.firstChapter!= null && !(this.firstChapter.equals("")))
+            book.setFirstChapter(this.firstChapter);
+
+        if(this.audienceTag!= null && !(this.audienceTag.size() == 0))
+            book.setAudienceTag(this.audienceTag);
+
+        if(this.links!= null && !(this.links.size() == 0))
+            book.setLinks(this.links);
+
         Book updateBook = bookRepository.save(book);
 
         return updateBook.parseToBookInformation();
