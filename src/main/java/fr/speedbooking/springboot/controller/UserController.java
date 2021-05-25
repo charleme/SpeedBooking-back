@@ -3,6 +3,7 @@ package fr.speedbooking.springboot.controller;
 
 import fr.speedbooking.springboot.data.ReadBookWithProgress;
 import fr.speedbooking.springboot.front.ReadBookInformationWithProgress;
+import fr.speedbooking.springboot.controller.dataStructure.CreateUserData;
 import fr.speedbooking.springboot.front.UserInformation;
 import fr.speedbooking.springboot.exception.RessourceNotFoundException;
 import fr.speedbooking.springboot.model.*;
@@ -55,9 +56,9 @@ public class UserController {
     }
 
     @PostMapping("/addUser")
-    public User createUserFinal(@RequestBody User user){
-//        user.setGenres(buildMappedGenres(list));
-        return userRepository.save(user);
+    public User createUserFinal(@RequestBody CreateUserData createUserData){
+        createUserData.user.setGenres(buildMappedGenres(createUserData.list));
+        return userRepository.save(createUserData.user);
     }
 
     //update user by id
@@ -74,17 +75,17 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-    @PutMapping("/updateUser/{user_id}&{book_id}")
+    @PutMapping("/updateUser/{user_id}/{book_id}")
     public ResponseEntity<User> updateUserGenre(@PathVariable Long user_id, @PathVariable Long book_id){
         User user = findUserById(user_id);
-        Book books = bookRepository.findById(book_id).orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id :" + book_id));
+        Book book = bookRepository.findById(book_id).orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id :" + book_id));
         Map<String, Integer> newGenre = user.getMappedGenres();
-        System.out.println(user.getGenres());
-        for(GenreBook genreBook : books.getBookGenres()){
+        for(GenreBook genreBook : book.getBookGenres()){
                     String genreName = genreBook.getIdGenre().getNameGenre();
                     newGenre.put(genreName, newGenre.get(genreName) + (genreBook.getScore()*25/100));
         }
-        System.out.println(newGenre);
+
+        System.out.println(user.getBooksRead());
         user.setGenres(newGenre);
         User updatedUser = userRepository.save(user);
         return ResponseEntity.ok(updatedUser);
@@ -128,6 +129,7 @@ public class UserController {
         return userRepository.findById(id).orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id :" + id));
     }
 
+    //Create the initial map of genre when a user is created
     public HashMap<String, Integer> buildMappedGenres(String[] list){
         List<String> listSelectedGenre= Arrays.stream(list).toList();
         List<Genre> genres = genreRepository.findAll();
