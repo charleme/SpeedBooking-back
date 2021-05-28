@@ -4,11 +4,7 @@ import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import fr.speedbooking.springboot.exception.RessourceNotFoundException;
 import fr.speedbooking.springboot.front.UserInformation;
@@ -23,8 +19,8 @@ public class AuthenticationController {
 	 private UserRepository userRepository;
 	 
 	//find user by email and password to check if the user exists
-	@PostMapping("/connect")
-	public UserInformation findUserByEmailAndPassword(@RequestBody String email, @RequestBody String password){
+	@GetMapping("/connect/{email}&{password}")
+	public UserInformation findUserByEmailAndPassword(@PathVariable String email, @PathVariable String password){
 		String modifiedPassword = User.PREFIX + password + User.SUFIX;
 		List<User> listOfUsers = userRepository.findAll();
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
