@@ -1,6 +1,6 @@
 package fr.speedbooking.springboot.repository;
 
-import fr.speedbooking.springboot.data.GenreWithScore;
+import fr.speedbooking.springboot.front.GenreWithScore;
 import fr.speedbooking.springboot.model.GenreBook;
 import fr.speedbooking.springboot.model.UserBook;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import fr.speedbooking.springboot.model.Book;
-import fr.speedbooking.springboot.model.User;
 
 import java.util.List;
 
@@ -25,7 +24,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<GenreBook> findGenreBooksByBookId(@Param("bookId") Long id);
 
     @Query("SELECT " +
-            "new fr.speedbooking.springboot.data.GenreWithScore(gb.score, g) " +
+            "new fr.speedbooking.springboot.front.GenreWithScore(g.idGenre, g.nameGenre,gb.score) " +
             "FROM Book b " +
             "JOIN b.bookGenres gb " +
             "JOIN gb.idGenre g " +

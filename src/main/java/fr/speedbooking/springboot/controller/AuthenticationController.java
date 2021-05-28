@@ -25,7 +25,7 @@ public class AuthenticationController {
 		List<User> listOfUsers = userRepository.findAll();
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		for (User user : listOfUsers) {
-			if (passwordEncoder.matches(modifiedPassword, user.getPassword()) && email.equals(user.getEmail())) {
+			if (email.equals(user.getEmail()) && passwordEncoder.matches(modifiedPassword, user.getPassword()) ) {
 				return user.parseToUserInformation();
 			}
 		}

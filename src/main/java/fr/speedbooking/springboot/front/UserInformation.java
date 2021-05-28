@@ -1,9 +1,12 @@
 package fr.speedbooking.springboot.front;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.speedbooking.springboot.model.User;
 
 
 import java.sql.Timestamp;
+import java.util.Map;
 
 
 public class UserInformation {
@@ -17,14 +20,14 @@ public class UserInformation {
 
     private Timestamp createTime;
 
-    private String genres;
+    private Map<String, Integer> genres;
 
     private String languages;
 
     public UserInformation() {
     }
 
-    public UserInformation(Long idUser, String username, String email, String password, Timestamp createTime, String genres, String languages) {
+    public UserInformation(Long idUser, String username, String email, String password, Timestamp createTime, Map<String, Integer> genres, String languages) {
         this.idUser = idUser;
         this.username = username;
         this.email = email;
@@ -74,11 +77,11 @@ public class UserInformation {
         this.createTime = createTime;
     }
 
-    public String getGenres() {
+    public Map<String, Integer> getGenres() {
         return genres;
     }
 
-    public void setGenres(String genres) {
+    public void setGenres(Map<String, Integer> genres) {
         this.genres = genres;
     }
 
@@ -90,10 +93,20 @@ public class UserInformation {
         this.languages = languages;
     }
 
+    private String parseGenreToString(){
+        try {
+            return new ObjectMapper().writeValueAsString(this.genres);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
     /*
     send user without books written and read
      */
     public User parseToUser(){
-        return new User(this.username, this.email, this.password, this.genres, this.languages, null, null);
+        return new User(this.username, this.email, this.password, this.parseGenreToString(), this.languages,
+                null, null);
     }
 }

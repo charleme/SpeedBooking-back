@@ -1,9 +1,9 @@
 package fr.speedbooking.springboot.controller.dataStructure;
 
-import fr.speedbooking.springboot.model.User;
+import fr.speedbooking.springboot.front.UserInformation;
 
 public class CreateUserData {
-    public User user;
+    public UserInformation user;
 
     public String[] list;
 }

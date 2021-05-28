@@ -1,9 +1,7 @@
 package fr.speedbooking.springboot.controller;
 
-
-import fr.speedbooking.springboot.data.ReadBookWithProgress;
-import fr.speedbooking.springboot.front.ReadBookInformationWithProgress;
 import fr.speedbooking.springboot.controller.dataStructure.CreateUserData;
+import fr.speedbooking.springboot.front.ReadBookWithProgress;
 import fr.speedbooking.springboot.front.UserInformation;
 import fr.speedbooking.springboot.exception.RessourceNotFoundException;
 import fr.speedbooking.springboot.model.*;
@@ -56,23 +54,34 @@ public class UserController {
     }
 
     @PostMapping("/addUser")
-    public User createUserFinal(@RequestBody CreateUserData createUserData){
-        createUserData.user.setGenres(buildMappedGenres(createUserData.list));
-        return userRepository.save(createUserData.user);
+    public UserInformation createUserFinal(@RequestBody CreateUserData createUserData){
+        User user = createUserData.user.parseToUser();
+        user.setGenres(buildMappedGenres(createUserData.list));
+        return userRepository.save(user).parseToUserInformation();
     }
 
     //update user by id
-    @PutMapping("/updateUser/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User newUser){
-        User user = findUserById(id);
-        user.setUsername(newUser.getUsername());
-        user.setEmail(newUser.getEmail());
-        user.setPassword(newUser.getPassword());
-        user.setGenres(newUser.getGenres());
-        user.setLanguages(newUser.getLanguages());
+    @PutMapping("/updateUser")
+    public ResponseEntity<UserInformation> updateUser(@RequestBody UserInformation updateUser){
+
+        User user = findUserById(updateUser.getIdUser());
+        if(user.getUsername() != null && !(user.getUsername().equals("")))
+            user.setUsername(updateUser.getUsername());
+
+        if(user.getEmail() != null && !(user.getEmail().equals("")))
+            user.setEmail(updateUser.getEmail());
+
+        if(user.getPassword() != null && !(user.getPassword().equals("")))
+            user.setPassword(updateUser.getPassword());
+
+        if(user.getGenres() != null && !(user.getGenres().equals("")))
+            user.setGenres(updateUser.getGenres());
+
+        if(user.getLanguages() != null && !(user.getLanguages().equals("")))
+            user.setLanguages(updateUser.getLanguages());
 
         User updatedUser = userRepository.save(user);
-        return ResponseEntity.ok(updatedUser);
+        return ResponseEntity.ok(updatedUser.parseToUserInformation());
     }
 
     @PutMapping("/updateUser/{user_id}/{book_id}")
@@ -117,11 +126,8 @@ public class UserController {
     }
 
     @GetMapping("/getUserReadBooks/{id}")
-    public List<ReadBookInformationWithProgress> getReadBook(@PathVariable Long id){
-        return this.userRepository.getReadBooksWithProgress(id)
-                .stream()
-                .map(ReadBookWithProgress::parseToReadBookInformation)
-                .collect(Collectors.toList());
+    public List<ReadBookWithProgress> getReadBook(@PathVariable Long id){
+        return this.userRepository.getReadBooksWithProgress(id);
     }
 
     //find user by id

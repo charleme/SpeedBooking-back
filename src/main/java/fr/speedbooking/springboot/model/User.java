@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 import java.util.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 public class User implements Serializable {
@@ -55,7 +56,7 @@ public class User implements Serializable {
                 Set<Book> books, Set<UserBook> booksRead) {
         this.username = username;
         this.email = email;
-        this.password = password;
+        this.setPassword(password);
         this.createTime = new Timestamp(System.currentTimeMillis());
         this.genres = genres;
         this.languages = languages;
@@ -141,7 +142,8 @@ public class User implements Serializable {
     }
 
     public UserInformation parseToUserInformation(){
-        return new UserInformation(this.idUser, this.username, this.email, this.password, this.createTime, this.genres, this.languages);
+        return new UserInformation(this.idUser, this.username, this.email, this.password, this.createTime,
+                this.getMappedGenres(), this.languages);
     }
 
     public Map<String, Integer> getMappedGenres(){

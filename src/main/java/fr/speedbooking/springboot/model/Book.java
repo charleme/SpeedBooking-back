@@ -180,7 +180,8 @@ public class Book implements Serializable{
 
     public BookInformation parseToBookInformation(){
         Long idAuthor = this.author.getIdUser();
-        return new BookInformation(this.idBook, this.titleBook, this.language, this.imageBook, this.summaryBook, this.firstChapter, this.audienceTag, this.links, idAuthor);
+        return new BookInformation(this.idBook, this.titleBook, this.language, this.imageBook, this.summaryBook,
+                this.firstChapter, this.getMappedAudienceTag(), this.getMappedLinks(), idAuthor);
     }
 
     public Map<String, Integer> getMappedAudienceTag(){
@@ -195,6 +196,23 @@ public class Book implements Serializable{
     public void setAudienceTag(Map<String, Integer> audienceTag){
         try {
             this.audienceTag = new ObjectMapper().writeValueAsString(audienceTag);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Map<String, String> getMappedLinks(){
+        try {
+            return new ObjectMapper().readValue(this.links, HashMap.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return new HashMap<>();
+    }
+
+    public void setLinks(Map<String, String> links){
+        try {
+            this.links = new ObjectMapper().writeValueAsString(links);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

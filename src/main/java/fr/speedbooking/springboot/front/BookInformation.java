@@ -1,5 +1,7 @@
 package fr.speedbooking.springboot.front;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.speedbooking.springboot.exception.RessourceNotFoundException;
 import fr.speedbooking.springboot.model.Book;
 import fr.speedbooking.springboot.model.User;
@@ -7,6 +9,7 @@ import fr.speedbooking.springboot.repository.BookRepository;
 import fr.speedbooking.springboot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Map;
 import java.util.Optional;
 
 public class BookInformation {
@@ -22,16 +25,18 @@ public class BookInformation {
 
     private String firstChapter;
 
-    private String audienceTag;
+    private Map<String, Integer> audienceTag;
 
-    private String links;
+    private Map<String, String> links;
 
     private Long id_author;
 
     public BookInformation() {
     }
 
-    public BookInformation(Long idBook, String titleBook, String language, String imageBook, String summaryBook, String firstChapter, String audienceTag, String links, Long id_author) {
+    public BookInformation(Long idBook, String titleBook, String language, String imageBook, String summaryBook,
+                           String firstChapter, Map<String, Integer> audienceTag, Map<String, String> links,
+                           Long id_author) {
         this.idBook = idBook;
         this.titleBook = titleBook;
         this.language = language;
@@ -91,19 +96,19 @@ public class BookInformation {
         this.firstChapter = firstChapter;
     }
 
-    public String getAudienceTag() {
+    public Map<String, Integer> getAudienceTag() {
         return audienceTag;
     }
 
-    public void setAudienceTag(String audienceTag) {
+    public void setAudienceTag(Map<String, Integer> audienceTag) {
         this.audienceTag = audienceTag;
     }
 
-    public String getLinks() {
+    public Map<String, String> getLinks() {
         return links;
     }
 
-    public void setLinks(String links) {
+    public void setLinks(Map<String, String> links) {
         this.links = links;
     }
 
@@ -120,24 +125,59 @@ public class BookInformation {
                 .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id : " + this.id_author));
 
         return new Book(this.titleBook, this.language, this.imageBook, this.summaryBook, this.firstChapter,
-                this.audienceTag, this.links, user, null, null);
+                this.parseAudienceTagToString(), this.parseLinkToString(), user, null, null);
+    }
+
+    private String parseAudienceTagToString(){
+        return this.parseMapToString(this.audienceTag);
+    }
+
+    private String parseLinkToString(){
+        return this.parseMapToString(this.links);
+    }
+
+    private String parseMapToString(Map map){
+        try {
+            return new ObjectMapper().writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     public BookInformation updateBookWithBookInformation(BookRepository bookRepository, UserRepository userRepository){
+        User user;
+
         Book book = bookRepository.findById(this.idBook)
                 .orElseThrow(() -> new RessourceNotFoundException("Book does not exist at the id : " + this.idBook));
 
-        User user = userRepository.findById(this.id_author)
-                .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id : " + this.id_author));
+        if(this.id_author != null) {
+            user = userRepository.findById(this.id_author)
+                    .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id : " + this.id_author));
+            book.setAuthor(user);
+        }
 
-        book.setBookTitle(this.titleBook);
-        book.setBookImage(this.imageBook);
-        book.setLanguage(this.language);
-        book.setSummaryBook(this.summaryBook);
-        book.setFirstChapter(this.firstChapter);
-        book.setAudienceTag(this.audienceTag);
-        book.setLinks(this.links);
-        book.setAuthor(user);
+        if(this.titleBook!= null && !(this.titleBook.equals("")))
+            book.setBookTitle(this.titleBook);
+
+        if(this.imageBook!= null && !(this.imageBook.equals("")))
+            book.setBookImage(this.imageBook);
+
+        if(this.language!= null && !(this.language.equals("")))
+            book.setLanguage(this.language);
+
+        if(this.summaryBook!= null && !(this.summaryBook.equals("")))
+            book.setSummaryBook(this.summaryBook);
+
+        if(this.firstChapter!= null && !(this.firstChapter.equals("")))
+            book.setFirstChapter(this.firstChapter);
+
+        if(this.audienceTag!= null && !(this.audienceTag.size() == 0))
+            book.setAudienceTag(this.audienceTag);
+
+        if(this.links!= null && !(this.links.size() == 0))
+            book.setLinks(this.links);
+
         Book updateBook = bookRepository.save(book);
 
         return updateBook.parseToBookInformation();
