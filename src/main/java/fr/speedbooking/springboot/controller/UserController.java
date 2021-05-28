@@ -130,9 +130,18 @@ public class UserController {
         return this.userRepository.getReadBooksWithProgress(id);
     }
 
+    @GetMapping("/isUserPassword/{idUser}&{password}")
+    public boolean isUserPassword(@PathVariable Long idUser, @PathVariable String password){
+        User user = userRepository.findById(idUser)
+                .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id :" + idUser));
+
+        return user.isPassword(password);
+    }
+
     //find user by id
     public User findUserById(long id){
-        return userRepository.findById(id).orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id :" + id));
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id :" + id));
     }
 
     //Create the initial map of genre when a user is created
