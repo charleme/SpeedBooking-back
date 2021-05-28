@@ -24,11 +24,12 @@ public class AuthenticationController {
 	 
 	//find user by email and password to check if the user exists
 	@PostMapping("/connect")
-	public UserInformation findUserByEmailAndPassword(@RequestBody String email, String password){
+	public UserInformation findUserByEmailAndPassword(@RequestBody String email, @RequestBody String password){
+		String modifiedPassword = User.PREFIX + password + User.SUFIX;
 		List<User> listOfUsers = userRepository.findAll();
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		for (User user : listOfUsers) {
-			if (passwordEncoder.matches(password, user.getPassword()) && email.equals(user.getEmail())) {
+			if (passwordEncoder.matches(modifiedPassword, user.getPassword()) && email.equals(user.getEmail())) {
 				return user.parseToUserInformation();
 			}
 		}
