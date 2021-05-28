@@ -141,8 +141,7 @@ public class UserController {
 
     @GetMapping("/isUserPassword/{idUser}&{password}")
     public boolean isUserPassword(@PathVariable Long idUser, @PathVariable String password){
-        User user = userRepository.findById(idUser)
-                .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id :" + idUser));
+        User user = findUserById(idUser);
 
         return user.isPassword(password);
     }
