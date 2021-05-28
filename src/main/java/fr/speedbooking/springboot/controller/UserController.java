@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.ClientInfoStatus;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -71,6 +72,14 @@ public class UserController {
 
         User updatedUser = userRepository.save(user);
         return ResponseEntity.ok(updatedUser);
+    }
+
+    @PutMapping("/resetUserGenres/{id}")
+    public ResponseEntity<UserInformation> resetUserGenres(@PathVariable Long id, @RequestBody String[] list){
+        User user = findUserById(id);
+        user.setGenres(buildMappedGenres(list));
+        User updatedUser = userRepository.save(user);
+        return ResponseEntity.ok(updatedUser.parseToUserInformation());
     }
 
     @PutMapping("/updateUser/{user_id}/{book_id}")
@@ -139,4 +148,6 @@ public class UserController {
         }
         return newGenreMap;
     }
+
+
 }
