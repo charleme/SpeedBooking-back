@@ -104,6 +104,11 @@ public class User implements Serializable {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         this.password = passwordEncoder.encode(PREFIX + password + SUFIX);
     }
+
+    public boolean isPassword(String password){
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder.matches(PREFIX + password + SUFIX, this.password);
+    }
     
     public Timestamp getCreateTime() {
         return createTime;
