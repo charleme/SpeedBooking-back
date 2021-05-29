@@ -95,6 +95,18 @@ public class BookController {
         return bookRepository.getGenreBooksWithScore(idBook);
     }
 
+    @GetMapping("/isAuthor/{idUser}&{idBook}")
+    public boolean isAuthor(@PathVariable Long idUser, @PathVariable Long idBook){
+        User user = userRepository.findById(idUser)
+                .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id : " + idUser));
+
+        Book book = bookRepository.findById(idBook)
+                .orElseThrow(() -> new RessourceNotFoundException("Book does not exist at the id : " + idBook));
+
+        User author = book.getAuthor();
+        return user.equals(author);
+    }
+
     @PutMapping( "/likeBook/{idBook}&{idUser}")
     public ResponseEntity<Map<String, Integer>> likeBook(@PathVariable Long idBook, @PathVariable Long idUser){
         return updateAudienceTag(idBook, idUser, true);
