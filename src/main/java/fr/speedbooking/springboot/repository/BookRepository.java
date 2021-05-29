@@ -30,5 +30,10 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             "JOIN gb.idGenre g " +
             "WHERE b.idBook = :bookId")
     List<GenreWithScore> getGenreBooksWithScore(@Param("bookId") Long id);
+
+    @Query("SELECT b FROM Book b " +
+            "JOIN b.author a " +
+            "WHERE a.idUser = :userId")
+    List<Book> getWrittenBooks (@Param("userId") Long id);
 }
 

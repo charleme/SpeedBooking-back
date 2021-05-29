@@ -1,6 +1,7 @@
 package fr.speedbooking.springboot.controller;
 
 import fr.speedbooking.springboot.controller.dataStructure.CreateUserData;
+import fr.speedbooking.springboot.front.BookInformation;
 import fr.speedbooking.springboot.front.ReadBookWithProgress;
 import fr.speedbooking.springboot.front.UserInformation;
 import fr.speedbooking.springboot.exception.RessourceNotFoundException;
@@ -144,6 +145,14 @@ public class UserController {
         User user = findUserById(idUser);
 
         return user.isPassword(password);
+    }
+
+    @GetMapping("/getWrittenBooks/{idUser}")
+    public List<BookInformation> getWrittenBooks(@PathVariable Long idUser){
+        return bookRepository.getWrittenBooks(idUser)
+                .stream()
+                .map(Book::parseToBookInformation)
+                .collect(Collectors.toList());
     }
 
     //find user by id
