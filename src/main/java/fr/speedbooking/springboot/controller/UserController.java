@@ -11,6 +11,8 @@ import fr.speedbooking.springboot.repository.GenreRepository;
 import fr.speedbooking.springboot.repository.UserBookRepository;
 import fr.speedbooking.springboot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -154,16 +156,36 @@ public class UserController {
                 .map(Book::parseToBookInformation)
                 .collect(Collectors.toList());
     }
+    
+    @GetMapping("/getFavTags/{idUser}")
+    public List<String> getFavTags(@PathVariable Long idUser){
+        User user = this.findUserById(idUser);
+        List<String> fav = user.getPreferredGenres();
+        return fav;
+    }
 
     //find user by id
     public User findUserById(long id){
         return userRepository.findById(id)
                 .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id :" + id));
     }
+    
+    @GetMapping("/getTL/{idUser}")
+    public List<BookInformation> getBooksbyGenre_algo1(@PathVariable Long idUser)
+    {
+    	User user = this.findUserById(idUser);
+    	Pageable pageable = PageRequest.of(0,12);
+    	List<String> fav = user.getPreferredGenres();
+    	return userRepository.algo1(idUser, fav, pageable)
+    			.stream()
+    			.map(Book::parseToBookInformation)
+                .collect(Collectors.toList());
+    }
+    
 
     //Create the initial map of genre when a user is created
     public HashMap<String, Integer> buildMappedGenres(String[] list){
-        List<String> listSelectedGenre= Arrays.stream(list).toList();
+        List<String> listSelectedGenre= Arrays.stream(list).collect(Collectors.toList());
         List<Genre> genres = genreRepository.findAll();
         HashMap<String, Integer> newGenreMap = new HashMap<String, Integer>();
 
