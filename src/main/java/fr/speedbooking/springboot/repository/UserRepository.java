@@ -4,6 +4,8 @@ import fr.speedbooking.springboot.front.ReadBookWithProgress;
 import fr.speedbooking.springboot.model.Book;
 import fr.speedbooking.springboot.model.User;
 import fr.speedbooking.springboot.model.UserBook;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -36,6 +38,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "JOIN ub.idBook b " +
             "WHERE u.idUser = :userId")
     List<ReadBookWithProgress> getReadBooksWithProgress(@Param("userId") Long id);
+    
+    @Query("SELECT DISTINCT b FROM Book b, UserBook ub "
+    		+ "WHERE b.idBook NOT IN (SELECT ub.idBook FROM UserBook ub WHERE ub.idUser.idUser= :userId) "
+    		+ "AND b.idBook IN (SELECT gb.idBook"
+    		+ " FROM GenreBook gb, Genre g "
+    		+ "WHERE g.nameGenre IN (:favs) "
+    		+ "AND gb.idGenre = g.idGenre)")
+
+    List<Book> algo1(@Param("userId") Long id, @Param("favs") List<String> favs, Pageable pageable);
     
 	//@Query("select user from User user where user.email = :email and user.password = :mdp")
 	//public User findByEmailAndPassword(@Param("email")String login, @Param("mdp") String mdp);

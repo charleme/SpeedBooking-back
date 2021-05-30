@@ -12,11 +12,11 @@ public class GenreBook implements Serializable {
     private Long idGenreBook;
 
 	@ManyToOne
-    @JoinColumn(name = "id_book")
+    @JoinColumn(name = "book_id_book")
     private Book idBook;
 	
 	@ManyToOne
-    @JoinColumn(name = "id_genre")
+    @JoinColumn(name = "genre_id_genre")
     private Genre idGenre;
 	
 	@Column(name = "score", length = 45)

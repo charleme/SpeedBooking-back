@@ -7,6 +7,9 @@ import fr.speedbooking.springboot.model.Book;
 import fr.speedbooking.springboot.model.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import fr.speedbooking.springboot.repository.UserRepository;
+
+import java.util.List;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;

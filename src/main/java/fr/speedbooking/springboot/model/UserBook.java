@@ -15,11 +15,11 @@ public class UserBook implements Serializable {
     private User idUser;
 	
 	@ManyToOne
-    @JoinColumn(name = "id_book")
+    @JoinColumn(name = "book_id_book")
     private Book idBook;
 	
 	@Column (name = "progress")
-	private int progress;
+	private Integer progress;
 	
 	public UserBook() {
 		
