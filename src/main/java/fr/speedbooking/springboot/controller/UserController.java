@@ -192,7 +192,7 @@ public class UserController {
     		eligibles_algo2 =  userRepository.alt_eligible_algo2(idUser);
     	}
     	else {
-    		eligibles_algo2 =  userRepository.eligible_algo2(idUser,res_algo1);
+    		eligibles_algo2 =  userRepository.eligible_algo2(idUser,TL);
     	}
     	for(Book book : eligibles_algo2) {
     		List<String> majTags = book.getMajorAudienceTags();
@@ -202,12 +202,18 @@ public class UserController {
     				inter.add(tag);
     			}
     		}
-    		if(!inter.isEmpty() && inter.size()<(21-res_algo1.size())) {
+    		if(!inter.isEmpty() && inter.size()<(26-res_algo1.size())) {
     			res_algo2.add(book);
     		}
     	}
     	
     	TL.addAll(res_algo2);
+    	
+    	Pageable pageable_random = PageRequest.of(0,4);
+    	
+    	List<Book> res_random = userRepository.findRandomBooks_TL(idUser, TL, pageable_random);
+    	
+    	TL.addAll(res_random);
     	
     	return TL
     			.stream()
