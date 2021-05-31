@@ -6,13 +6,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 @Entity
 public class Book implements Serializable{
+	public static final int NUMBER_MAJOR_AUDIENCE_TAGS_ANALYSED = 3;
     public static final int AUDIENCE_TAG_INCREMENT = 1;
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -216,6 +220,36 @@ public class Book implements Serializable{
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+    }
+    
+    public List<String> getMajorAudienceTags(){
+        List<String> majorTags = new ArrayList<>();
+
+        Map<String, Integer> tags = this.getMappedAudienceTag();
+
+        Comparator<String> valueComparator = new Comparator<String>() {
+            public int compare(String k1, String k2) {
+                Integer v1 = tags.get(k1);
+                Integer v2 = tags.get(k2);
+                int compare = v2.compareTo(v1); //DESC
+                if (compare == 0) {
+                    return 1;
+                } else {
+                    return compare;
+                }
+
+            }
+        };
+
+        TreeMap<String,Integer> sortedByValues = new TreeMap<>(valueComparator);
+
+        sortedByValues.putAll(tags);
+
+        for (int i = 0; i < Math.min(NUMBER_MAJOR_AUDIENCE_TAGS_ANALYSED, tags.size()); i++) {
+            majorTags.add(sortedByValues.pollFirstEntry().getKey());
+        }
+
+        return majorTags;
     }
 
     public void applyChangeAlgorithm(boolean like, List<String> userPreferredGenres){

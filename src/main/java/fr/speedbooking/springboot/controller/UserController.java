@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.ClientInfoStatus;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -173,16 +174,47 @@ public class UserController {
     @GetMapping("/getTL/{idUser}")
     public List<BookInformation> getBooksbyGenre_algo1(@PathVariable Long idUser)
     {
+    	List<Book> TL = new ArrayList<Book>();
+    	
     	User user = this.findUserById(idUser);
-    	Pageable pageable = PageRequest.of(0,12);
+    	
+    	Pageable pageable_algo1 = PageRequest.of(0,12);
     	List<String> fav = user.getPreferredGenres();
-    	return userRepository.algo1(idUser, fav, pageable)
+
+    	List<Book> res_algo1 =  userRepository.algo1(idUser, fav, pageable_algo1);
+    	
+    	TL.addAll(res_algo1);
+    	
+    	List<Book> res_algo2 = new ArrayList<Book>();
+    	List<Book> eligibles_algo2 = new ArrayList<Book>();
+    	
+    	if(res_algo1.isEmpty()) {
+    		eligibles_algo2 =  userRepository.alt_eligible_algo2(idUser);
+    	}
+    	else {
+    		eligibles_algo2 =  userRepository.eligible_algo2(idUser,res_algo1);
+    	}
+    	for(Book book : eligibles_algo2) {
+    		List<String> majTags = book.getMajorAudienceTags();
+    		List<String> inter = new ArrayList<String>();
+    		for(String tag : majTags) {
+    			if(fav.contains(tag)) {
+    				inter.add(tag);
+    			}
+    		}
+    		if(!inter.isEmpty() && inter.size()<(21-res_algo1.size())) {
+    			res_algo2.add(book);
+    		}
+    	}
+    	
+    	TL.addAll(res_algo2);
+    	
+    	return TL
     			.stream()
-    			.map(Book::parseToBookInformation)
+                .map(book -> book.parseToBookInformation())
                 .collect(Collectors.toList());
     }
     
-
     //Create the initial map of genre when a user is created
     public HashMap<String, Integer> buildMappedGenres(String[] list){
         List<String> listSelectedGenre= Arrays.stream(list).collect(Collectors.toList());
