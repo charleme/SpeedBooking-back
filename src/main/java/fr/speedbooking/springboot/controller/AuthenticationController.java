@@ -29,7 +29,7 @@ public class AuthenticationController {
 				return user.parseToUserInformation();
 			}
 		}
-	    throw new RessourceNotFoundException("Your email or password is not correct ! Try again");
+	    return null;
 	}
 
 }
