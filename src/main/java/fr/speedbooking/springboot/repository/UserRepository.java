@@ -56,6 +56,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     		+ "WHERE b.idBook NOT IN (SELECT ub.idBook FROM UserBook ub WHERE ub.idUser.idUser= :userId)")
     List<Book> alt_eligible_algo2(@Param("userId") Long id);
     
+    @Query("SELECT DISTINCT b FROM Book b, UserBook ub "
+    		+ "WHERE b.idBook NOT IN (SELECT ub.idBook FROM UserBook ub WHERE ub.idUser.idUser= :userId) "
+    		+ "AND b NOT IN (:TL) ORDER BY RAND()")
+    List<Book> findRandomBooks_TL(@Param("userId") Long id, @Param("TL") List<Book> TL, Pageable pageable);
+    
 	//@Query("select user from User user where user.email = :email and user.password = :mdp")
 	//public User findByEmailAndPassword(@Param("email")String login, @Param("mdp") String mdp);
 }
