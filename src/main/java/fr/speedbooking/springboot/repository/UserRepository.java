@@ -45,8 +45,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
     		+ " FROM GenreBook gb, Genre g "
     		+ "WHERE g.nameGenre IN (:favs) "
     		+ "AND gb.idGenre = g.idGenre)")
-
     List<Book> algo1(@Param("userId") Long id, @Param("favs") List<String> favs, Pageable pageable);
+    
+    @Query("SELECT DISTINCT b FROM Book b, UserBook ub "
+    		+ "WHERE b.idBook NOT IN (SELECT ub.idBook FROM UserBook ub WHERE ub.idUser.idUser= :userId) "
+    		+ "AND b NOT IN (:algo1)")
+    List<Book> eligible_algo2(@Param("userId") Long id, @Param("algo1") List<Book> algo1);
+    
+    @Query("SELECT DISTINCT b FROM Book b, UserBook ub "
+    		+ "WHERE b.idBook NOT IN (SELECT ub.idBook FROM UserBook ub WHERE ub.idUser.idUser= :userId)")
+    List<Book> alt_eligible_algo2(@Param("userId") Long id);
     
 	//@Query("select user from User user where user.email = :email and user.password = :mdp")
 	//public User findByEmailAndPassword(@Param("email")String login, @Param("mdp") String mdp);

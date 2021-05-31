@@ -116,6 +116,13 @@ public class BookController {
     public ResponseEntity<Map<String, Integer>> dislikeBook(@PathVariable Long idBook, @PathVariable Long idUser){
         return updateAudienceTag(idBook, idUser, false);
     }
+    
+    @GetMapping("/getMajTags/{id}")
+    public List<String> getFavTags(@PathVariable Long id){
+        Book book = bookRepository.findById(id).get();
+        List<String> tags = book.getMajorAudienceTags();
+        return tags;
+    }
 
     private ResponseEntity<Map<String, Integer>> updateAudienceTag(Long idBook, Long idUser, boolean like) {
         User user = userRepository.findById(idUser)
