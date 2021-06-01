@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.ClientInfoStatus;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -215,10 +216,14 @@ public class UserController {
     	
     	TL.addAll(res_random);
     	
-    	return TL
+    	List<BookInformation> User_TL =  TL
     			.stream()
                 .map(book -> book.parseToBookInformation())
                 .collect(Collectors.toList());
+    	
+    	Collections.shuffle(User_TL);
+    	
+    	return User_TL;
     }
     
     //Create the initial map of genre when a user is created
