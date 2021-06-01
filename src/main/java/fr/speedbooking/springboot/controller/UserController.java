@@ -210,7 +210,7 @@ public class UserController {
     	
     	TL.addAll(res_algo2);
     	
-    	Pageable pageable_random = PageRequest.of(0,4);
+    	Pageable pageable_random = PageRequest.of(0,30-TL.size());
     	
     	List<Book> res_random = userRepository.findRandomBooks_TL(idUser, TL, pageable_random);
     	
