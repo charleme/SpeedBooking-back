@@ -5,11 +5,13 @@ import fr.speedbooking.springboot.front.GenreWithScore;
 import fr.speedbooking.springboot.exception.RessourceNotFoundException;
 import fr.speedbooking.springboot.front.BookInformation;
 import fr.speedbooking.springboot.model.Book;
+import fr.speedbooking.springboot.model.Genre;
 import fr.speedbooking.springboot.model.GenreBook;
 import fr.speedbooking.springboot.model.User;
 import fr.speedbooking.springboot.model.UserBook;
 import fr.speedbooking.springboot.repository.BookRepository;
 import fr.speedbooking.springboot.repository.GenreBookRepository;
+import fr.speedbooking.springboot.repository.GenreRepository;
 import fr.speedbooking.springboot.repository.UserBookRepository;
 import fr.speedbooking.springboot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ public class BookController {
 
     @Autowired
     private GenreBookRepository genreBookRepository;
+    
+    @Autowired
+    GenreRepository genreRepository;
 
     @GetMapping("/books")
     public List<BookInformation> getAllBooks(){
@@ -78,7 +83,15 @@ public class BookController {
 
     //add book to the database
     @PostMapping("/addBook")
-    public ResponseEntity<BookInformation> createBook(@RequestBody BookInformation book){
+    public ResponseEntity<BookInformation> createBook(@RequestBody BookInformation book) {
+    	List<Genre> genresList = genreRepository.findAll();
+    	HashMap<String, Integer> initializedGenresMap = new HashMap<String, Integer>();
+    	
+    	for (Genre genre: genresList) {
+    		initializedGenresMap.put(genre.getNameGenre(), 0);
+    	}
+    
+    	book.setAudienceTag(initializedGenresMap);
         Book createdBook = bookRepository.save(book.parseToBook(userRepository));
         return ResponseEntity.ok(createdBook.parseToBookInformation());
     }
