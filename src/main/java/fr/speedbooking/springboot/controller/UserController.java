@@ -98,6 +98,17 @@ public class UserController {
         return ResponseEntity.ok(updatedUser.parseToUserInformation());
     }
 
+    @PutMapping("editPassword/{idUser}&{password}")
+    public ResponseEntity<UserInformation> editPassword(@PathVariable Long idUser, @PathVariable String password){
+        User user = userRepository.findById(idUser)
+                .orElseThrow(() -> new RessourceNotFoundException("User does not exist at the id :" + idUser));
+
+        user.setPassword(password);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(user.parseToUserInformation());
+    }
+
     @PutMapping("/updateUser/{user_id}/{book_id}")
     public ResponseEntity<User> updateUserGenre(@PathVariable Long user_id, @PathVariable Long book_id){
         User user = findUserById(user_id);
