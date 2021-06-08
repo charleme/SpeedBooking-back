@@ -109,8 +109,18 @@ public class BookController {
     
     //update book informations
     @PutMapping("/updateBook")
-    public ResponseEntity<BookInformation> updateBook(@RequestBody BookInformation updateBook){
-        return ResponseEntity.ok(updateBook.updateBookWithBookInformation(bookRepository, userRepository));
+    public ResponseEntity<BookInformation> updateBook(@RequestBody CreateBookData updateBook){
+    	GenreBookController controller = new GenreBookController();
+    	
+    	GenreInformation[] updateGenres = updateBook.genres;
+    	List<GenreBook> bookGenres = bookRepository.findGenreBooksByBookId(updateBook.book.getIdBook());
+    	for(GenreBook genreBook : bookGenres) {
+    		genreBookRepository.delete(genreBook);
+    	}
+    	for(GenreInformation genreInformation : updateGenres) {
+    		controller.createGenreBook(genreInformation.getIdGenre(), updateBook.book.getIdBook(), 40);
+    	}
+        return ResponseEntity.ok(updateBook.book.updateBookWithBookInformation(bookRepository, userRepository));
     }
 
     @GetMapping("/bookGenresWithScore/{idBook}")

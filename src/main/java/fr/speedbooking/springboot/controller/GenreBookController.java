@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
@@ -55,4 +56,27 @@ public class GenreBookController {
         response.put("created", Boolean.TRUE);
         return ResponseEntity.ok(response);
     }
+    
+//    @DeleteMapping("/deleteGenreBook/{id}")
+//    public ResponseEntity<Map<String, Boolean>> deleteGenreBookById(@PathVariable Long id){
+//    	Map<String, Boolean> response = new HashMap<>();
+//    	response.put("deleted", Boolean.TRUE);
+//
+//        List<GenreBook> bookGenres = bookRepository.findGenreBooksByBookId(id);
+//        List<UserBook> userBooks = bookRepository.findUserBooksByBookId(id);
+//
+//        if(bookGenres != null)
+//            for (GenreBook bookGenre : bookGenres) {
+//                genreBookRepository.delete(bookGenre);
+//            }
+//
+//        if(userBooks != null)
+//            for (UserBook userBook: userBooks) {
+//                userBookRepository.delete(userBook);
+//            }
+//    	
+//    	bookRepository.deleteById(id);
+//    	
+//    	return ResponseEntity.ok(response);
+//    }
 }
