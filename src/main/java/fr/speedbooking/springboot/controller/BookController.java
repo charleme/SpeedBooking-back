@@ -2,8 +2,10 @@ package fr.speedbooking.springboot.controller;
 
 
 import fr.speedbooking.springboot.front.GenreWithScore;
+import fr.speedbooking.springboot.controller.dataStructure.CreateBookData;
 import fr.speedbooking.springboot.exception.RessourceNotFoundException;
 import fr.speedbooking.springboot.front.BookInformation;
+import fr.speedbooking.springboot.front.GenreInformation;
 import fr.speedbooking.springboot.model.Book;
 import fr.speedbooking.springboot.model.Genre;
 import fr.speedbooking.springboot.model.GenreBook;
@@ -83,7 +85,10 @@ public class BookController {
 
     //add book to the database
     @PostMapping("/addBook")
-    public ResponseEntity<BookInformation> createBook(@RequestBody BookInformation book) {
+    public ResponseEntity<BookInformation> createBook(@RequestBody CreateBookData createBookData) {
+    	GenreBookController controller = new GenreBookController();
+    	
+    	BookInformation book = createBookData.book;
     	List<Genre> genresList = genreRepository.findAll();
     	HashMap<String, Integer> initializedGenresMap = new HashMap<String, Integer>();
     	
@@ -92,6 +97,11 @@ public class BookController {
     	}
     
     	book.setAudienceTag(initializedGenresMap);
+    	
+    	for(GenreInformation genre : createBookData.genres) {
+    		controller.createGenreBook(genre.getIdGenre(), book.getIdBook(), 40);
+    	}
+    	
         Book createdBook = bookRepository.save(book.parseToBook(userRepository));
         return ResponseEntity.ok(createdBook.parseToBookInformation());
     }
@@ -99,8 +109,18 @@ public class BookController {
     
     //update book informations
     @PutMapping("/updateBook")
-    public ResponseEntity<BookInformation> updateBook(@RequestBody BookInformation updateBook){
-        return ResponseEntity.ok(updateBook.updateBookWithBookInformation(bookRepository, userRepository));
+    public ResponseEntity<BookInformation> updateBook(@RequestBody CreateBookData updateBook){
+    	GenreBookController controller = new GenreBookController();
+    	
+    	GenreInformation[] updateGenres = updateBook.genres;
+    	List<GenreBook> bookGenres = bookRepository.findGenreBooksByBookId(updateBook.book.getIdBook());
+    	for(GenreBook genreBook : bookGenres) {
+    		genreBookRepository.delete(genreBook);
+    	}
+    	for(GenreInformation genreInformation : updateGenres) {
+    		controller.createGenreBook(genreInformation.getIdGenre(), updateBook.book.getIdBook(), 40);
+    	}
+        return ResponseEntity.ok(updateBook.book.updateBookWithBookInformation(bookRepository, userRepository));
     }
 
     @GetMapping("/bookGenresWithScore/{idBook}")
