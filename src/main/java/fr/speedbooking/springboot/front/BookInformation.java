@@ -145,7 +145,7 @@ public class BookInformation {
         return "";
     }
 
-    public BookInformation updateBookWithBookInformation(BookRepository bookRepository, UserRepository userRepository){
+    public Book updateBookWithBookInformation(BookRepository bookRepository, UserRepository userRepository){
         User user;
 
         Book book = bookRepository.findById(this.idBook)
@@ -180,6 +180,6 @@ public class BookInformation {
 
         Book updateBook = bookRepository.save(book);
 
-        return updateBook.parseToBookInformation();
+        return updateBook;
     }
 }

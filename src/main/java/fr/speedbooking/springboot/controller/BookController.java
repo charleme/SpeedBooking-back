@@ -86,7 +86,6 @@ public class BookController {
     //add book to the database
     @PostMapping("/addBook")
     public ResponseEntity<BookInformation> createBook(@RequestBody CreateBookData createBookData) {
-    	GenreBookController controller = new GenreBookController();
     	
     	BookInformation book = createBookData.book;
     	List<Genre> genresList = genreRepository.findAll();
@@ -97,12 +96,15 @@ public class BookController {
     	}
     
     	book.setAudienceTag(initializedGenresMap);
-    	
-    	for(GenreInformation genre : createBookData.genres) {
-    		controller.createGenreBook(genre.getIdGenre(), book.getIdBook(), 40);
-    	}
-    	
         Book createdBook = bookRepository.save(book.parseToBook(userRepository));
+
+    	for(GenreInformation genreInformation : createBookData.genres) {
+    	    Genre genre = genreRepository.findById(genreInformation.getIdGenre())
+                    .orElseThrow(() -> new RessourceNotFoundException("Genre does not exist at the id : " + genreInformation.getIdGenre()));
+    	    GenreBook genrebook = new GenreBook(createdBook, genre, 40);
+            genreBookRepository.save(genrebook);
+    	}
+
         return ResponseEntity.ok(createdBook.parseToBookInformation());
     }
     
@@ -110,17 +112,21 @@ public class BookController {
     //update book informations
     @PutMapping("/updateBook")
     public ResponseEntity<BookInformation> updateBook(@RequestBody CreateBookData updateBook){
-    	GenreBookController controller = new GenreBookController();
-    	
+        Book book = updateBook.book.updateBookWithBookInformation(bookRepository, userRepository);
+
     	GenreInformation[] updateGenres = updateBook.genres;
     	List<GenreBook> bookGenres = bookRepository.findGenreBooksByBookId(updateBook.book.getIdBook());
     	for(GenreBook genreBook : bookGenres) {
     		genreBookRepository.delete(genreBook);
     	}
+
     	for(GenreInformation genreInformation : updateGenres) {
-    		controller.createGenreBook(genreInformation.getIdGenre(), updateBook.book.getIdBook(), 40);
+            Genre genre = genreRepository.findById(genreInformation.getIdGenre())
+                    .orElseThrow(() -> new RessourceNotFoundException("Genre does not exist at the id : " + genreInformation.getIdGenre()));
+            GenreBook genrebook = new GenreBook(book, genre, 40);
+            genreBookRepository.save(genrebook);
     	}
-        return ResponseEntity.ok(updateBook.book.updateBookWithBookInformation(bookRepository, userRepository));
+        return ResponseEntity.ok(book.parseToBookInformation());
     }
 
     @GetMapping("/bookGenresWithScore/{idBook}")
