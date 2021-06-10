@@ -71,19 +71,19 @@ public class UserController {
     public ResponseEntity<UserInformation> updateUser(@RequestBody UserInformation updateUser){
 
         User user = findUserById(updateUser.getIdUser());
-        if(user.getUsername() != null && !(user.getUsername().equals("")))
+        if(updateUser.getUsername() != null && !(updateUser.getUsername().equals("")))
             user.setUsername(updateUser.getUsername());
 
-        if(user.getEmail() != null && !(user.getEmail().equals("")))
+        if(updateUser.getEmail() != null && !(updateUser.getEmail().equals("")))
             user.setEmail(updateUser.getEmail());
 
-        if(user.getPassword() != null && !(user.getPassword().equals("")))
+        if(updateUser.getPassword() != null && !(updateUser.getPassword().equals("")))
             user.setPassword(updateUser.getPassword());
 
-        if(user.getGenres() != null && !(user.getGenres().equals("")))
+        if(updateUser.getGenres() != null && !(updateUser.getGenres().equals("")))
             user.setGenres(updateUser.getGenres());
 
-        if(user.getLanguages() != null && !(user.getLanguages().equals("")))
+        if(updateUser.getLanguages() != null && !(updateUser.getLanguages().equals("")))
             user.setLanguages(updateUser.getLanguages());
 
         User updatedUser = userRepository.save(user);
